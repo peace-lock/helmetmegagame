@@ -170,6 +170,18 @@ a tag that expires immediately.
 Going hungry sends one DM (`» You went hungry this turn. −1 to Gambits.`) via
 `db/lib/dm.js#sendDm`, the REST twin that exists so this fires from both the
 bot's cron and the Dev Panel's End-turn button. A quiet −1 ⬢ sends nothing.
+
+`runHungerPass` does not send that DM itself. It returns
+`starvedDiscordUserIds` on its summary and the sending happens in
+`advanceTurn()`'s `runSideEffects()` thunk, alongside the turn announcement and
+the Dawn wipe. The pass is therefore two reads and three bulk writes with no
+network call in it at all — which matters because at 100+ players the DMs are
+two sequential Discord round-trips *per starving character*, and awaiting that
+inside the Dev Panel's server action used to hold the request open long enough
+to freeze the web app's navigation. The list is split back off the summary in
+`resolveNeeds()` before the audit row is written, so the logged details are
+unchanged.
+
 The pass writes **one summary `hunger_resolved` audit row** per turn, not one
 per character — at 100+ players the latter would push 200 entries a day into
 `/gm/audit` and drown every human-authored line.

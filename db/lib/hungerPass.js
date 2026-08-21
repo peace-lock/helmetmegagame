@@ -13,11 +13,11 @@
 //      can never go negative — the clamp is structural, not a Math.max.
 //
 // Shaped for 100+ players: two reads and three bulk writes regardless of
-// headcount. Only the DMs are per-player, and they're best-effort.
+// headcount, and no network call at all — the per-player "you went hungry" DMs
+// are returned as a list of Discord user IDs for advanceTurn() to send later.
 //
 // Takes `prisma` as a parameter — see db/lib/dm.js for why.
 const { HUNGER_SLUG, HUNGERLESS_SLUG, ATE_MEAL_SLUG } = require("./constants");
-const { sendDm } = require("./dm");
 
 const HUNGER_DM = "You went hungry this turn. −1 to Gambits.";
 
@@ -106,16 +106,11 @@ async function runHungerPass(prisma, turn) {
     }),
   ]);
 
-  // One DM per hungry player, sequential (discordRequest already backs off on
-  // 429) and individually caught: a Discord failure must never block or roll
-  // back the turn advance, same posture as the turn announcement and the Dawn
-  // wipe. No DM for a quiet -1 ⬢.
-  for (const character of toStarve) {
-    await sendDm(prisma, character.discordUserId, HUNGER_DM).catch((err) =>
-      console.error(`Hunger DM to ${character.discordUserId} failed:`, err),
-    );
-  }
-
+  // The DMs are deliberately NOT sent here. They're the one per-player,
+  // network-bound part of the pass, and awaiting them inside the turn advance
+  // is what used to freeze the Dev Panel's "End turn" for minutes. The list is
+  // handed back instead and sent from advanceTurn()'s runSideEffects(), which
+  // the web action runs after the response is already flushed.
   return {
     turnNumber: turn.number,
     paid: toPay.length,
@@ -123,6 +118,7 @@ async function runHungerPass(prisma, turn) {
     shielded: shieldedIds.length,
     skipped,
     starvedCharacterIds: toStarve.map((character) => character.id),
+    starvedDiscordUserIds: toStarve.map((character) => character.discordUserId),
   };
 }
 

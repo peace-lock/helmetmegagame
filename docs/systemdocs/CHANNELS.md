@@ -163,15 +163,24 @@ it's touched for deletion, so a mid-run crash leaves content merely
 limitation (no checkpoint/resume machinery), same framing as the node-cron
 catch-up gap already documented in `docs/systemdocs/ARCHITECTURE.md`.
 
-**Consolidation**: `db/index.js#advanceTurn()` now owns both the turn
-announcement and the Dawn wipe directly (both REST-only, no gateway
-needed) — previously each was duplicated per caller (a gateway version in
-the bot, a REST version in the web Dev Panel). `bot/src/lib/turnEngine.js`
-and `web/app/(app)/gm/dev/actions.js#forceAdvanceTurn` now just call
+**Consolidation**: `db/index.js#advanceTurn()` owns the turn announcement,
+the Hunger DMs and the Dawn wipe (all REST-only, no gateway needed) —
+previously each was duplicated per caller (a gateway version in the bot, a
+REST version in the web Dev Panel). `bot/src/lib/turnEngine.js` and
+`web/app/(app)/gm/dev/actions.js#forceAdvanceTurn` now just call
 `advanceTurn()` and write their own `AuditLog` entry (the one thing that
-legitimately still differs per caller). Both Discord side effects are
-best-effort — wrapped in `.catch()` — so a Discord-side failure can never
-block or roll back the turn advance itself.
+legitimately still differs per caller). Every side effect is best-effort —
+wrapped in `.catch()` — so a Discord-side failure can never block or roll
+back the turn advance itself.
+
+**But it does not *run* them.** All three are returned as one
+`runSideEffects()` thunk, because the wipe is minutes long and awaiting it
+inside the Dev Panel's server action held the request open — and a pending
+server action blocks client-side navigation, so the entire web app appeared
+to freeze until a hard refresh. The bot's cron awaits the thunk inline; the
+web action passes it to `next/server`'s `after()`, so the new turn is on
+screen before the wipe starts. A GM watching `#archive` fill up several
+minutes after the turn flipped is the expected behavior, not a stall.
 
 ## 6. Narrowcast channels (`#radio`, `#intercom`, outside the Location layout)
 

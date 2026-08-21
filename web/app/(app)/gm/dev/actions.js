@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import {
   prisma,
   advanceTurn as advanceTurnInDb,
@@ -135,27 +136,55 @@ export async function updateNextTurn(formData) {
   revalidatePath("/gm/dev");
 }
 
-// advanceTurnInDb() now owns every Discord side effect itself (turn
-// announcement, and the Dawn message wipe if GameConfig.messageWipeEnabled
-// is on) — REST-based, so this needs nothing gateway-specific. With the
-// wipe enabled this can take a while to resolve (fetching/archiving/
-// deleting across every Location's channels), so it may take a few minutes
-// on a Dawn turn.
+// advanceTurnInDb() composes every Discord side effect (Hunger DMs, the turn
+// announcement, and the Dawn message wipe if GameConfig.messageWipeEnabled is
+// on) but hands them back as a thunk rather than running them — REST-based, so
+// nothing gateway-specific is needed here.
+//
+// That thunk goes to after(), never into the request. The Dawn wipe walks every
+// Location's channels sequentially and can take minutes; awaiting it here used
+// to hold the server action open for the whole time, and a pending action
+// blocks client-side navigation — so the Dev Panel appeared to freeze until you
+// hard-refreshed. Now the response carries the already-committed new turn and
+// Discord catches up behind it.
 export async function forceAdvanceTurn() {
   const session = await requireSuperadmin();
 
-  const { previousTurn, newTurn } = await advanceTurnInDb();
+  try {
+    const { advanced, previousTurn, newTurn, runSideEffects } = await advanceTurnInDb();
 
-  await prisma.auditLog.create({
-    data: {
-      actorDiscordUserId: session.discordUserId,
-      actionType: "superadmin_turn_forced",
-      details: { previousTurnId: previousTurn?.id ?? null, newTurnId: newTurn.id, number: newTurn.number, phase: newTurn.phase, weather: newTurn.weather },
-    },
-  });
+    // Lost the race to the bot's cron or a second click. The turn did advance,
+    // so the panel should still repaint — there's just nothing of ours to log
+    // and no side effects of ours to run.
+    if (!advanced) {
+      revalidatePath("/gm/dev");
+      revalidatePath("/", "layout");
+      return { ok: true };
+    }
 
-  revalidatePath("/gm/dev");
-  revalidatePath("/", "layout");
+    await prisma.auditLog.create({
+      data: {
+        actorDiscordUserId: session.discordUserId,
+        actionType: "superadmin_turn_forced",
+        details: { previousTurnId: previousTurn?.id ?? null, newTurnId: newTurn.id, number: newTurn.number, phase: newTurn.phase, weather: newTurn.weather },
+      },
+    });
+
+    revalidatePath("/gm/dev");
+    revalidatePath("/", "layout");
+
+    after(() =>
+      runSideEffects().catch((err) => console.error("Turn side effects failed:", err)),
+    );
+
+    return { ok: true };
+  } catch (err) {
+    // There's no error.js boundary in this app, so an uncaught throw here
+    // would replace the panel with Next's generic error page and leave the GM
+    // unable to tell whether the turn advanced. Report it in place instead.
+    console.error("Force advance turn failed:", err);
+    return { ok: false, error: "Could not end the turn. Check the server logs." };
+  }
 }
 
 // Matches GameConfig's schema @default values for the balance-knob fields

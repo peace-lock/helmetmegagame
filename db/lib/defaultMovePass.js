@@ -23,13 +23,13 @@
 // writing a roll instead of a flat number.
 //
 // Shaped like db/lib/hungerPass.js: bulk reads, one summary audit row rather
-// than one per character, and every Discord side effect best-effort so a
-// failed webhook can never block the turn advance. Takes `prisma` as a
-// parameter for the same reason (see db/lib/dm.js).
+// than one per character, and — also like hungerPass — no network call of its
+// own. The summary posts and DMs it wants are returned as `posts` and `dms`
+// for advanceTurn()'s runSideEffects() to perform, so they can't hold the turn
+// advance open. Takes `prisma` as a parameter for the same reason (see
+// db/lib/dm.js).
 const { parseResourceDelta, parseResourceDice, rollResourceDice } = require("./resourceDelta");
 const { applyMoveEffects, describeMoveEffects } = require("./moveEffects");
-const { postAsCharacter } = require("./discordRest");
-const { sendDm } = require("./dm");
 
 // Reproduces the #turns submission pipeline (dice first, then flat deltas)
 // so a Default Move reading "+2" or "1d6*3" is worth exactly what the same
@@ -115,8 +115,14 @@ async function runDefaultMovePass(prisma, turn) {
 
   if (filed.length === 0) return { turnNumber: turn.number, filed: 0, shared: 0, characterIds: [] };
 
-  let shared = 0;
-  for (const { def, action } of filed) {
+  // Neither the summary posts nor the DMs are sent here. Both are per-player
+  // Discord round-trips, and awaiting them inside resolveNeeds() is what makes
+  // the Dev Panel's "End turn" hold the request open — the same reason the
+  // Hunger pass stopped sending its own DMs. They are described here and
+  // performed by advanceTurn()'s runSideEffects(), which the web action runs
+  // after the response is already flushed.
+  const posts = [];
+  for (const { def } of filed) {
     // The channel is resolved from where the character stands NOW, not from
     // the summaryChannelId snapshotted when they saved the panel — a
     // Location's plain channel IS its summary channel, so travelling should
@@ -124,19 +130,12 @@ async function runDefaultMovePass(prisma, turn) {
     // fallback for a character with no current location.
     const channelId = def.character.location?.discordChannelId ?? def.summaryChannelId;
     if (!def.shareInSummary || !def.summaryMessage || !channelId) continue;
-
-    try {
-      await postAsCharacter(channelId, def.character, def.summaryMessage);
-      shared += 1;
-    } catch (err) {
-      console.error(`Default Move summary post for ${def.characterId} failed:`, err);
-    }
+    posts.push({ channelId, character: def.character, message: def.summaryMessage });
   }
 
-  // One DM each, sequential and individually caught, same posture as the
-  // Hunger pass: the player needs to know a turn passed and something was
+  // One DM each: the player needs to know a turn passed and something was
   // filed for them, since they weren't there to see it.
-  for (const { def, action } of filed) {
+  const dms = filed.map(({ def, action }) => {
     const effects = describeMoveEffects(action.appliedEffects);
     // sendDm applies the `»` prefix to the first line itself — don't write
     // one here or it doubles up.
@@ -145,16 +144,18 @@ async function runDefaultMovePass(prisma, turn) {
       `» ${action.description}`,
       ...(effects ? [`**Applied:** ${effects}`] : []),
     ];
-    await sendDm(prisma, def.character.discordUserId, lines.join("\n")).catch((err) =>
-      console.error(`Default Move DM to ${def.character.discordUserId} failed:`, err),
-    );
-  }
+    return { discordUserId: def.character.discordUserId, content: lines.join("\n") };
+  });
 
   return {
     turnNumber: turn.number,
     filed: filed.length,
-    shared,
+    // "shareable", not "shared": the posts have not been attempted yet, so a
+    // count of successes isn't knowable at audit-write time any more.
+    shareable: posts.length,
     characterIds: filed.map(({ def }) => def.characterId),
+    posts,
+    dms,
   };
 }
 

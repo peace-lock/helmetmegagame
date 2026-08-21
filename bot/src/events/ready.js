@@ -34,7 +34,11 @@ module.exports = {
 
     const runAdvanceTurn = () => {
       advanceTurn()
-        .then((turn) => console.log(`Turn advanced to #${turn.number} (${turn.phase})`))
+        .then((turn) =>
+          // Null when a GM's Dev Panel advance won the race — the turn moved,
+          // just not here. Not a failure, so don't log it as one.
+          console.log(turn ? `Turn advanced to #${turn.number} (${turn.phase})` : "Turn already advanced elsewhere; skipped."),
+        )
         .catch((err) => console.error("Failed to advance turn:", err));
     };
     cron.schedule("0 4 * * *", runAdvanceTurn, { timezone: "America/Chicago" });
