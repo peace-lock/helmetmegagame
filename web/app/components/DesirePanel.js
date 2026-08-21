@@ -10,7 +10,7 @@ const DESIRE_HELP = (
   <>
     <p>Characters earn Tag Points by fulfilling Desires.</p>
     <p>The more difficult and personal the Desire, the more Tag Points you earn.</p>
-    <p style={{ color: "var(--muted)" }}>
+    <p className="text-muted">
       Leaders can set Desires aligned with faction goals, like conquering territory. Everyone else is
       encouraged to find personally relevant ones — from having a nice meal to proving themselves in
       front of an audience.
@@ -84,7 +84,7 @@ export default function DesirePanel({ desire, cooldownUntilTurn, openTurnNumber 
 
   return (
     <section className="panel p-4">
-      <h2 className="mb-3 flex items-center gap-1.5 font-bold">
+      <h2 className="panel-header panel-header--with-icon">
         Desire
         <InfoIcon text={DESIRE_HELP} />
       </h2>
@@ -92,7 +92,7 @@ export default function DesirePanel({ desire, cooldownUntilTurn, openTurnNumber 
       {desire ? (
         <div className="flex flex-col gap-3">
           <p className="text-sm">{desire.text}</p>
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
+          <p className="text-sm text-muted">
             Worth {desire.points} Tag Point{desire.points === 1 ? "" : "s"}
             {desire.setTurnNumber != null ? ` — set on turn ${desire.setTurnNumber}` : ""}
           </p>
@@ -106,7 +106,7 @@ export default function DesirePanel({ desire, cooldownUntilTurn, openTurnNumber 
           </div>
         </div>
       ) : onCooldown ? (
-        <p className="text-sm" style={{ color: "var(--muted)" }}>
+        <p className="text-sm text-muted">
           You just ended a Desire — you can set a new one next turn.
         </p>
       ) : (
@@ -142,7 +142,7 @@ export default function DesirePanel({ desire, cooldownUntilTurn, openTurnNumber 
       )}
 
       {error && (
-        <p className="mt-3 text-sm" style={{ color: "var(--accent)" }}>
+        <p className="mt-3 text-sm text-accent">
           {error}
         </p>
       )}
@@ -158,7 +158,7 @@ export default function DesirePanel({ desire, cooldownUntilTurn, openTurnNumber 
         <p className="text-sm">
           {desire?.text} — {desire?.points} Tag Point{desire?.points === 1 ? "" : "s"}
         </p>
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           The points land immediately. Tell the GMs how you pulled it off.
         </p>
       </RequestDialog>

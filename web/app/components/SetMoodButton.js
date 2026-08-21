@@ -58,7 +58,7 @@ export default function SetMoodButton({ currentMood = "NEUTRAL" }) {
             ))}
           </select>
         </label>
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           A mood lasts 2 turns and then wears off on its own.
         </p>
       </RequestDialog>

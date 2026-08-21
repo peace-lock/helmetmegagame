@@ -56,7 +56,7 @@ export default function EndTurnButton({ turnLabel, wipesMessages }) {
         </button>
       </div>
       {error && (
-        <p className="text-sm" style={{ color: "var(--accent)" }}>
+        <p className="text-sm text-danger">
           {error}
         </p>
       )}

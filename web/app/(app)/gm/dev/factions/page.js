@@ -4,6 +4,7 @@ import { prisma } from "@lifeweb/db";
 import { auth } from "@/lib/auth";
 import { isSuperadmin } from "@/lib/superadmin";
 import { updateFaction, deleteFaction } from "../actions";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 export default async function DevFactionsPage() {
   const session = await auth();
@@ -13,9 +14,9 @@ export default async function DevFactionsPage() {
   const factions = await prisma.faction.findMany({ orderBy: { name: "asc" } });
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-6 p-6 sm:p-8">
+    <PageShell>
       <Link href="/gm/dev" className="btn-quiet">&larr; Back to Dev Panel</Link>
-      <h1 className="text-2xl font-bold">Factions ({factions.length})</h1>
+      <PageHeader title={`Factions (${factions.length})`} />
 
       <div className="panel overflow-x-auto">
         <table className="data-table">
@@ -78,7 +79,7 @@ export default async function DevFactionsPage() {
             ))}
             {factions.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center" style={{ color: "var(--muted)" }}>
+                <td colSpan={5} className="text-center text-muted">
                   No factions yet.
                 </td>
               </tr>
@@ -86,6 +87,6 @@ export default async function DevFactionsPage() {
           </tbody>
         </table>
       </div>
-    </div>
+    </PageShell>
   );
 }

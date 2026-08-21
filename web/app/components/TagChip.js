@@ -19,7 +19,7 @@ export default function TagChip({ tag, quantity = 1 }) {
       >
         {tag.name}
         {stack && (
-          <span style={{ color: "var(--muted)" }}> &times;{stack}</span>
+          <span className="text-muted"> &times;{stack}</span>
         )}
       </span>
       <span className="tag-tooltip" role="tooltip">
@@ -28,7 +28,7 @@ export default function TagChip({ tag, quantity = 1 }) {
           {stack ? ` \u00d7${stack}` : ""}
         </strong>
         {tag.description && <p>{tag.description}</p>}
-        {requirement && <p style={{ color: "var(--muted)" }}>{requirement}</p>}
+        {requirement && <p className="text-muted">{requirement}</p>}
         <span style={{ color: costColor(tag.pointCost) }}>{formatCost(tag.pointCost)} pts</span>
       </span>
     </span>

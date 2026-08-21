@@ -19,7 +19,7 @@ function TagPicker({ tags, selectedId, onSelect }) {
 
   if (!offered.length) {
     return (
-      <p className="text-sm" style={{ color: "var(--muted)" }}>
+      <p className="text-sm text-muted">
         Nothing available.
       </p>
     );
@@ -67,13 +67,13 @@ function TagPicker({ tags, selectedId, onSelect }) {
                     </span>
                   ) : null}
                   {tag.group?.name ? (
-                    <span className="text-xs" style={{ color: "var(--muted)" }}>
+                    <span className="text-xs text-muted">
                       {tag.group.name}
                     </span>
                   ) : null}
                 </span>
                 {tag.description && (
-                  <span className="mt-1 block text-xs" style={{ color: "var(--muted)" }}>
+                  <span className="mt-1 block text-xs text-muted">
                     {tag.description}
                   </span>
                 )}
@@ -82,7 +82,7 @@ function TagPicker({ tags, selectedId, onSelect }) {
           );
         })}
         {visible.length === 0 && (
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
+          <p className="text-sm text-muted">
             Nothing available in this category.
           </p>
         )}

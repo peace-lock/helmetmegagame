@@ -46,13 +46,13 @@ export default function DefaultEffortPanel({ characterId, defaultEffort, locatio
 
   return (
     <section className="panel p-4">
-      <h2 className="mb-3 flex items-center gap-1.5 font-bold">
+      <h2 className="panel-header panel-header--with-icon">
         Default Move
         <InfoIcon
           text={
             <>
               <p>If you don&apos;t submit a Move on a given day, this is assumed instead.</p>
-              <p style={{ color: "var(--muted)" }}>
+              <p className="text-muted">
                 Tip: add a Resource ⬢ amount like +3 or a dice roll like +1d6*3 anywhere in the
                 text and it&apos;ll be applied automatically. It can be negative too — say a Cook
                 spending Resources ⬢ on ingredients (-3).
@@ -84,7 +84,7 @@ export default function DefaultEffortPanel({ characterId, defaultEffort, locatio
 
         {shareInSummary && (
           <>
-            <div className="panel px-3 py-2 text-xs" style={{ color: "var(--muted)" }}>
+            <div className="panel px-3 py-2 text-xs text-muted">
               Current location: {location?.name ?? "None — set a location before this can post"}
             </div>
             <label className="field">
@@ -115,7 +115,7 @@ export default function DefaultEffortPanel({ characterId, defaultEffort, locatio
             Delete
           </button>
           {saved && !pending ? (
-            <span className="text-xs" style={{ color: "var(--muted)" }}>
+            <span className="text-xs text-muted">
               Saved.
             </span>
           ) : null}

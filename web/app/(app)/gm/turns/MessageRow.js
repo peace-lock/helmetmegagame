@@ -44,7 +44,7 @@ export function MessageComposerRow({ characterId, characterName, colSpan, onDone
             Send
           </button>
           {sent && (
-            <span className="text-xs" style={{ color: "var(--positive)" }}>
+            <span className="text-xs text-positive">
               Sent.
             </span>
           )}

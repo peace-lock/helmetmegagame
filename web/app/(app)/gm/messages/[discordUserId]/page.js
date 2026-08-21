@@ -4,6 +4,7 @@ import { prisma } from "@lifeweb/db";
 import { getGmSession, listGuildMembers } from "@/lib/discordGuild";
 import { sendDmReply } from "../../actions";
 import MessageList from "./MessageList";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 export default async function MessageThreadPage({ params }) {
   const { discordUserId } = await params;
@@ -22,11 +23,11 @@ export default async function MessageThreadPage({ params }) {
   const label = character?.name ?? username ?? discordUserId;
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-6 p-6 sm:p-8">
+    <PageShell width="narrow">
       <Link href="/gm/messages" className="btn-quiet">
         &larr; Back to Messages
       </Link>
-      <h1 className="text-2xl font-bold">{label}</h1>
+      <PageHeader title={label} />
 
       <MessageList messages={messages} />
 
@@ -40,6 +41,6 @@ export default async function MessageThreadPage({ params }) {
           Send
         </button>
       </form>
-    </div>
+    </PageShell>
   );
 }

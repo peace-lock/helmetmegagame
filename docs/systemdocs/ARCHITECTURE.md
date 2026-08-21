@@ -132,6 +132,25 @@ Source: `web/app/character/actions.js` (`submitAction`), `bot/src/events/message
 
 ## 7. Visual Design System
 
+> **Partly superseded.** The "Ravenheart Underground" pass has since landed the
+> token layer, the Tailwind `@theme` bridge, the type scale, the shared-class
+> rewrite and the atmosphere layers. The palette brief below is the one part
+> that changed direction outright: dawn is no longer a light parchment theme,
+> because Ravenheart is underground and a daylight theme contradicts the
+> premise — both phases are now darks differing by lamplight temperature, with
+> the light theme kept only as the `limestone` comparison backup. Live tokens
+> are at the top of `web/app/globals.css`; the conventions are in CLAUDE.md's
+> "Web app style conventions". The page-composition pass has since landed too:
+> `PageShell`/`PageHeader`/`SkeletonPage`, all 14 skeletons, the 28 section
+> headings, the mobile nav "More" sheet, the character sheet's explicit
+> columns, and the 120 colour-only inline `style` objects (now `text-muted` /
+> `text-accent` / `text-danger` utilities). Two items from that plan were
+> deliberately NOT done, with reasons recorded in `globals.css`: `.panel` gets
+> no default padding (it is used both as a padded card and as an unpadded
+> frame around a table, so a default would inset every table), and limestone's
+> raised tier is carried by shadow rather than luminance (its surface is
+> already near-white).
+
 There's no "auto-styler" tool for a real codebase the way a one-off page builder works — the equivalent discipline here is a small, deliberate token + component system in Tailwind v4, applied consistently, instead of hand-rolled classes per page (which is what `gm/page.js` and `character/page.js` currently do).
 
 **Removed entirely** (explicit ask — "get rid of the BG sprites," "remove any flavor text B.S.," and this stuff actively works against "must feel fast, not laggy"):
@@ -144,7 +163,7 @@ There's no "auto-styler" tool for a real codebase the way a one-off page builder
 - The two-palette concept from `globals.css`, but as flat, static CSS variables per phase — no per-frame animation:
   - **Dawn**: orange → light yellow → orange sky range, dark brass foreground, terracotta accents/borders, cream text.
   - **Dusk**: Caves-of-Qud green → dark grey-green sky range, near-black moss foreground, terracotta accents/borders, cream text.
-- A very light, static scanline texture is fine to keep for CRT character (low-opacity, no flicker animation) — it's cheap and doesn't fight responsiveness.
+- ~~A very light, static scanline texture is fine to keep for CRT character (low-opacity, no flicker animation) — it's cheap and doesn't fight responsiveness.~~ **Superseded.** What actually shipped was `.scanlines` at 0.06 opacity, which is invisible on any display while still paying for a full-viewport composited layer. The "Ravenheart Underground" pass replaced it with `.grain` (static SVG turbulence, ~2.5%) and `.vignette`. The CRT direction is parked, not dead — see `CRT-TERMINAL.md`.
 - Underline-on-select for interactive options (`.menu-item`'s hover/focus underline already does this — keep the pattern, extend it to nav rail active states).
 - One shared component layer instead of per-page hand-rolling: panel/card, button, table, tab/rail item, form field — build once (`web/app/components/ui/`), reuse across Character, Players, Turns, Audit Log.
 

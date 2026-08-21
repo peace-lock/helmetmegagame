@@ -107,7 +107,7 @@ export default function RequestsTable({ requests, onReview, onView }) {
                   <td className="whitespace-nowrap">
                     <CharacterLink characterId={row.characterId} name={row.characterName} isGm />
                   </td>
-                  <td className="whitespace-nowrap" style={{ color: "var(--muted)" }}>
+                  <td className="whitespace-nowrap text-muted">
                     {row.discordUsername}
                   </td>
                   <td className="whitespace-nowrap">{row.factionName || "—"}</td>
@@ -116,7 +116,7 @@ export default function RequestsTable({ requests, onReview, onView }) {
                   </td>
                   <td>
                     <span className="block">{row.reason}</span>
-                    <span className="mt-1 block text-xs" style={{ color: "var(--muted)" }}>
+                    <span className="mt-1 block text-xs text-muted">
                       {row.summary}
                       {row.gmNotes ? ` · ${row.gmNotes}` : ""}
                     </span>
@@ -141,7 +141,7 @@ export default function RequestsTable({ requests, onReview, onView }) {
             ))}
             {visible.length === 0 && (
               <tr>
-                <td colSpan={COL_COUNT} className="text-center" style={{ color: "var(--muted)" }}>
+                <td colSpan={COL_COUNT} className="text-center text-muted">
                   No requests match these filters.
                 </td>
               </tr>

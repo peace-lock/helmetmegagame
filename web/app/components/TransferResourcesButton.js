@@ -112,11 +112,11 @@ export default function TransferResourcesButton({ selfId, selfName, parties }) {
           </label>
         </div>
         {sameParty && (
-          <p className="text-xs" style={{ color: "var(--accent)" }}>
+          <p className="text-xs text-accent">
             Source and recipient are the same.
           </p>
         )}
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           You can move resources out of any Silo or any player — say why in the reason above.
           {selfName ? ` You are ${selfName}.` : ""}
         </p>

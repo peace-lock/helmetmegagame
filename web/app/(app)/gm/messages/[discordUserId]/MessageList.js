@@ -29,13 +29,13 @@ export default function MessageList({ messages }) {
           >
             <MarkdownContent content={m.content} />
           </div>
-          <span className="mt-1 text-xs" style={{ color: "var(--muted)" }}>
+          <span className="mt-1 text-xs text-muted">
             {m.createdAt.toLocaleString()}
           </span>
         </div>
       ))}
       {messages.length === 0 && (
-        <p className="text-sm" style={{ color: "var(--muted)" }}>
+        <p className="text-sm text-muted">
           No messages yet.
         </p>
       )}

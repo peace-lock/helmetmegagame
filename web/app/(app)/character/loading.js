@@ -1,9 +1,5 @@
+import { SkeletonPage } from "@/app/components/PageShell";
+
 export default function Loading() {
-  return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6 p-6 sm:p-8">
-      <div className="panel animate-pulse p-4" style={{ color: "var(--muted)" }}>
-        Loading…
-      </div>
-    </div>
-  );
+  return <SkeletonPage width="wide" title="Character" panels={[[40, 90, 65], [70, 100, 55]]} />;
 }

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@lifeweb/db";
 import { getGmSession, getGuildMember, isCursed } from "@/lib/discordGuild";
 import { updateCharacterRaw, grantTag, revokeTag } from "../../actions";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 export default async function DevCharacterEditPage({ params }) {
   const { characterId } = await params;
@@ -29,9 +30,9 @@ export default async function DevCharacterEditPage({ params }) {
   const grantableTags = allTags.filter((t) => !ownedTagIds.has(t.id));
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-6 p-6 sm:p-8">
+    <PageShell width="narrow">
       <Link href="/gm/players" className="btn-quiet">&larr; Back to Players</Link>
-      <h1 className="text-2xl font-bold">{character.name}</h1>
+      <PageHeader title={character.name} />
 
       <form action={updateCharacterRaw} className="panel flex flex-col gap-3 p-4">
         <input type="hidden" name="characterId" value={character.id} />
@@ -137,10 +138,10 @@ export default async function DevCharacterEditPage({ params }) {
       </form>
 
       <div className="panel flex flex-col gap-3 p-4">
-        <h2 className="font-bold">Tags</h2>
+        <h2 className="panel-header">Tags</h2>
 
         {ownedTags.length === 0 ? (
-          <p className="text-sm" style={{ color: "var(--muted)" }}>No tags owned.</p>
+          <p className="text-sm text-muted">No tags owned.</p>
         ) : (
           <ul className="flex flex-col gap-2">
             {ownedTags.map((ct) => (
@@ -148,7 +149,7 @@ export default async function DevCharacterEditPage({ params }) {
                 <span>
                   {ct.tag.name}
                   {ct.quantity > 1 && <> &times;{ct.quantity}</>}{" "}
-                  <span style={{ color: "var(--muted)" }}>({ct.source})</span>
+                  <span className="text-muted">({ct.source})</span>
                 </span>
                 <form action={revokeTag}>
                   <input type="hidden" name="characterTagId" value={ct.id} />
@@ -179,6 +180,6 @@ export default async function DevCharacterEditPage({ params }) {
           </form>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }

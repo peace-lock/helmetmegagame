@@ -1,9 +1,13 @@
+import PageShell from "@/app/components/PageShell";
+
+// The fallback for any route in this group without its own loading.js. It
+// deliberately renders no title: unlike every other skeleton here it cannot
+// know which page is arriving, and guessing one would flash the wrong heading.
 export default function Loading() {
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6 p-6 sm:p-8">
-      <div className="panel animate-pulse p-4" style={{ color: "var(--muted)" }}>
-        Loading…
-      </div>
-    </div>
+    <PageShell>
+      <div className="panel animate-pulse p-4" style={{ height: 96 }} />
+      <div className="panel animate-pulse p-4" style={{ height: 220 }} />
+    </PageShell>
   );
 }

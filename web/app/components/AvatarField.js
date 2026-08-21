@@ -32,7 +32,7 @@ export default function AvatarField({ defaultTurnPingOptIn, defaultRomanceOptOut
           </span>
         </label>
         {fileName ? (
-          <span className="text-sm" style={{ color: "var(--muted)" }}>
+          <span className="text-sm text-muted">
             {fileName}
           </span>
         ) : null}

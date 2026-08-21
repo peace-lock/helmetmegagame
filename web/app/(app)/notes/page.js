@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@lifeweb/db";
 import { auth } from "@/lib/auth";
 import NotesList from "./NotesList";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 // Notes are personal — a player's own list of messages they've starred in a
 // Location channel (see bot/src/events/messageReactionAdd.js), never a
@@ -26,12 +27,12 @@ export default async function NotesPage() {
   }));
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6 p-6 sm:p-8">
-      <h1 className="text-2xl font-bold">Notes</h1>
-      <p className="text-sm" style={{ color: "var(--muted)" }}>
-        Messages you&apos;ve starred with ⭐ in a location channel land here.
-      </p>
+    <PageShell width="narrow">
+      <PageHeader
+        title="Notes"
+        subtitle="Messages you&apos;ve starred with ⭐ in a location channel land here."
+      />
       <NotesList notes={entries} />
-    </div>
+    </PageShell>
   );
 }

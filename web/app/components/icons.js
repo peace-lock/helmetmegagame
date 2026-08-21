@@ -115,3 +115,14 @@ export function EditIcon(props) {
     </svg>
   );
 }
+
+// The mobile bottom bar's "More" affordance — see NavRail.js's MOBILE_PRIMARY.
+export function MoreIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" {...props}>
+      <circle cx="5" cy="12" r="1.4" />
+      <circle cx="12" cy="12" r="1.4" />
+      <circle cx="19" cy="12" r="1.4" />
+    </svg>
+  );
+}

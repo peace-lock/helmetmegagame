@@ -181,7 +181,7 @@ export default function MovePanel({ move, readOnly = false, onClose }) {
       <div className="modal-overlay" onClick={() => !pending && close()}>
         <div className="modal-panel" style={{ maxWidth: "40rem" }} onClick={(e) => e.stopPropagation()}>
           <div className="modal-header flex items-center justify-between gap-3">
-            <h2 className="text-lg font-bold">{readOnly ? "Move (read only)" : "Adjudicate Move"}</h2>
+            <h2 className="section-title">{readOnly ? "Move (read only)" : "Adjudicate Move"}</h2>
             <DevCharacterButton characterId={move.characterId} name={move.characterName} />
           </div>
 
@@ -189,7 +189,7 @@ export default function MovePanel({ move, readOnly = false, onClose }) {
             <h3 className="field-label">Character</h3>
             <Line label="Player">
               <CharacterLink characterId={move.characterId} name={move.characterName} isGm />{" "}
-              <span style={{ color: "var(--muted)" }}>({move.discordUsername})</span>
+              <span className="text-muted">({move.discordUsername})</span>
             </Line>
             <Line label="Location">{move.locationLabel}</Line>
             <Line label="Faction">{move.factionName || "—"}</Line>
@@ -201,7 +201,7 @@ export default function MovePanel({ move, readOnly = false, onClose }) {
                 ))}
               </div>
             ) : (
-              <p className="text-sm" style={{ color: "var(--muted)" }}>
+              <p className="text-sm text-muted">
                 No tags.
               </p>
             )}
@@ -237,10 +237,10 @@ export default function MovePanel({ move, readOnly = false, onClose }) {
             </Switch>
 
             <Line label="Dice">
-              {move.rollLabel || <span style={{ color: "var(--muted)" }}>—</span>}
+              {move.rollLabel || <span className="text-muted">—</span>}
             </Line>
             {edits.moveKind !== move.moveKind && (
-              <p className="text-xs" style={{ color: "var(--accent)" }}>
+              <p className="text-xs text-accent">
                 {edits.moveKind === "GAMBIT"
                   ? "Saving rolls a fresh d6 and applies their current Mood and Hunger."
                   : "Saving clears the roll — a Routine never carries one."}
@@ -263,7 +263,7 @@ export default function MovePanel({ move, readOnly = false, onClose }) {
               />
             </label>
             {move.appliedSummary && (
-              <p className="text-xs" style={{ color: "var(--muted)" }}>
+              <p className="text-xs text-muted">
                 Already pushed to their sheet: {move.appliedSummary}.
               </p>
             )}
@@ -305,20 +305,20 @@ export default function MovePanel({ move, readOnly = false, onClose }) {
           </div>
 
           {move.reviewedByUsername && (
-            <p className="mt-3 text-xs" style={{ color: "var(--muted)" }}>
+            <p className="mt-3 text-xs text-muted">
               Solved by {move.reviewedByUsername}
               {move.reviewedAtLabel ? ` · ${move.reviewedAtLabel}` : ""}
             </p>
           )}
 
           {!readOnly && !locked && !error && (
-            <p className="mt-3 text-xs" style={{ color: "var(--muted)" }}>
+            <p className="mt-3 text-xs text-muted">
               Claiming this Move…
             </p>
           )}
 
           {error && (
-            <p className="mt-3 text-sm" style={{ color: "var(--accent)" }}>
+            <p className="mt-3 text-sm text-accent">
               {error}
             </p>
           )}
@@ -333,8 +333,7 @@ export default function MovePanel({ move, readOnly = false, onClose }) {
                 <span className="tag-hover" tabIndex={0} style={{ display: "inline-flex" }}>
                   <button
                     type="button"
-                    className="btn-quiet"
-                    style={{ color: "var(--accent)" }}
+                    className="btn-danger"
                     onClick={() => setRejecting(true)}
                     disabled={disabled || !locked}
                   >
@@ -378,7 +377,7 @@ export default function MovePanel({ move, readOnly = false, onClose }) {
         onCancel={() => !pending && setRejecting(false)}
         onConfirm={submitReject}
       >
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           The Move is deleted and their turn frees up. They&apos;re DM&apos;d this reason.
         </p>
       </RequestDialog>

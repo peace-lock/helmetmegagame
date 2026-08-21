@@ -7,7 +7,8 @@
     "prebuild": "prisma generate --schema=../db/prisma/schema.prisma",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "audit:contrast": "node scripts/audit-contrast.js"
   },
   "dependencies": {
     "@lifeweb/db": "^0.0.0",

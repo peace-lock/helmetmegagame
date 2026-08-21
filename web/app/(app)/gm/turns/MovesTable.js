@@ -100,13 +100,13 @@ export default function MovesTable({ moves, onAdjudicate, onView }) {
                   <td className="whitespace-nowrap">
                     <CharacterLink characterId={row.characterId} name={row.characterName} isGm />
                   </td>
-                  <td className="whitespace-nowrap" style={{ color: "var(--muted)" }}>
+                  <td className="whitespace-nowrap text-muted">
                     {row.discordUsername}
                   </td>
                   <td className="whitespace-nowrap">{row.factionName || "—"}</td>
                   <td>
                     <span className="block">{row.description}</span>
-                    <span className="mt-1 block text-xs" style={{ color: "var(--muted)" }}>
+                    <span className="mt-1 block text-xs text-muted">
                       {row.kindLabel}
                       {row.opposed ? " · Opposed" : ""}
                       {row.rollLabel ? ` · ${row.rollLabel}` : ""}
@@ -119,7 +119,7 @@ export default function MovesTable({ moves, onAdjudicate, onView }) {
                     {row.statusLabel}
                   </td>
                   <ResourceDeltaCell value={row.resourceDelta} />
-                  <td style={{ color: "var(--muted)" }}>{row.gmNotes || "—"}</td>
+                  <td className="text-muted">{row.gmNotes || "—"}</td>
                 </tr>
                 {messagingId === row.characterId && (
                   <MessageComposerRow
@@ -133,7 +133,7 @@ export default function MovesTable({ moves, onAdjudicate, onView }) {
             ))}
             {visible.length === 0 && (
               <tr>
-                <td colSpan={COL_COUNT} className="text-center" style={{ color: "var(--muted)" }}>
+                <td colSpan={COL_COUNT} className="text-center text-muted">
                   No Moves match these filters.
                 </td>
               </tr>

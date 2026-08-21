@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@lifeweb/db";
 import { getGmSession, listGuildMembers } from "@/lib/discordGuild";
 import CharacterLink from "../../../components/CharacterLink";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 const PAGE_SIZE = 50;
 const NO_FACTION_LABEL = "No faction";
@@ -108,8 +109,8 @@ export default async function AuditLogPage({ searchParams }) {
   }
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6 p-6 sm:p-8">
-      <h1 className="text-2xl font-bold">Audit Log</h1>
+    <PageShell>
+      <PageHeader title="Audit Log" />
 
       <form className="panel flex flex-wrap items-end gap-3 p-4">
         <label className="field">
@@ -175,7 +176,7 @@ export default async function AuditLogPage({ searchParams }) {
                 <td className="whitespace-nowrap">
                   {usernameById.get(entry.actorDiscordUserId) ?? entry.actorDiscordUserId}
                   {characterByDiscordUserId.has(entry.actorDiscordUserId) ? (
-                    <div className="text-xs" style={{ color: "var(--muted)" }}>
+                    <div className="text-xs text-muted">
                       <CharacterLink
                         characterId={characterByDiscordUserId.get(entry.actorDiscordUserId).id}
                         name={characterByDiscordUserId.get(entry.actorDiscordUserId).name}
@@ -195,7 +196,7 @@ export default async function AuditLogPage({ searchParams }) {
             ))}
             {entries.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center" style={{ color: "var(--muted)" }}>
+                <td colSpan={6} className="text-center text-muted">
                   No entries match these filters.
                 </td>
               </tr>
@@ -204,7 +205,7 @@ export default async function AuditLogPage({ searchParams }) {
         </table>
       </div>
 
-      <div className="flex items-center justify-between text-sm" style={{ color: "var(--muted)" }}>
+      <div className="flex items-center justify-between text-sm text-muted">
         <span>
           Page {page} of {totalPages} ({total} entries)
         </span>
@@ -221,6 +222,6 @@ export default async function AuditLogPage({ searchParams }) {
           )}
         </div>
       </div>
-    </div>
+    </PageShell>
   );
 }

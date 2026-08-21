@@ -57,7 +57,7 @@ const SECTIONS = {
         <Line label="Player claimed">
           {effect.playerClaimedPoints ?? effect.pointsAwarded ?? 0} Tag Points
           {effect.playerClaimedPoints != null && (
-            <span style={{ color: "var(--muted)" }}> — now {effect.pointsAwarded ?? 0}</span>
+            <span className="text-muted"> — now {effect.pointsAwarded ?? 0}</span>
           )}
         </Line>
         <label className="field" style={{ width: "12rem" }}>
@@ -69,7 +69,7 @@ const SECTIONS = {
             onChange={(e) => setEdit("pointsAwarded", e.target.value)}
           />
         </label>
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           Confirm moves only the difference, so re-scoring twice never double-pays. Undo revokes the
           award even if the balance goes negative, and reopens the Desire.
         </p>
@@ -101,7 +101,7 @@ const SECTIONS = {
       <>
         <Line label="Tag removed">{stackLabel(effect)}</Line>
         <SpendField value={edits.resourcesSpent} onChange={(v) => setEdit("resourcesSpent", v)} />
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           Undo puts the tag back with its original source and expiry, and refunds the cost.
         </p>
       </>
@@ -115,7 +115,7 @@ const SECTIONS = {
         <Line label="Moved">
           {effect.amount} ⬢ from {effect.from?.name ?? "?"} to {effect.to?.name ?? "?"}
         </Line>
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           Nothing to edit here — either it stands or you reverse it.
         </p>
       </>
@@ -129,7 +129,7 @@ const SECTIONS = {
         <Line label="Handed over">
           {stackLabel(effect)} to {effect.toName ?? "?"}
         </Line>
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           Undo moves the tag back to its original holder.
         </p>
       </>
@@ -143,7 +143,7 @@ const SECTIONS = {
         <Line label="Bled">
           {effect.targetName ?? "—"}
           {effect.tier ? (
-            <span style={{ color: "var(--muted)" }}> · {effect.tier} blood, worth {effect.nominalAmount}</span>
+            <span className="text-muted"> · {effect.tier} blood, worth {effect.nominalAmount}</span>
           ) : null}
         </Line>
         <Line label="Pool">
@@ -158,7 +158,7 @@ const SECTIONS = {
           />
           Clear their Drained tag but keep the blood
         </label>
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           The pool caps at 100, so this edits what actually moved, not what was asked for. Undo draws
           the same amount back and clears Drained.
         </p>
@@ -177,7 +177,7 @@ const SECTIONS = {
         <BloodField value={edits.bloodDelta} onChange={(v) => setEdit("bloodDelta", v)} />
 
         {effect.killed ? (
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
+          <p className="text-sm text-muted">
             ☠ {effect.targetName ?? "They"} has been killed.
           </p>
         ) : (
@@ -185,7 +185,7 @@ const SECTIONS = {
             className="flex flex-col gap-2 border-t pt-3"
             style={{ borderColor: "var(--accent)" }}
           >
-            <p className="text-sm" style={{ color: "var(--accent)" }}>
+            <p className="text-sm text-accent">
               ☠ {effect.targetName ?? "This character"} is still alive. Feeding someone to the Lifeweb
               never kills them automatically — read the reason, then do it here.
             </p>
@@ -198,7 +198,7 @@ const SECTIONS = {
             >
               {killing ? "Working…" : `Kill ${effect.targetName ?? "them"}`}
             </button>
-            <p className="text-xs" style={{ color: "var(--muted)" }}>
+            <p className="text-xs text-muted">
               This deletes their personal Discord role, clears their nickname and marks them Cursed —
               the same thing the character editor does. Undo does not revive them.
             </p>
@@ -214,7 +214,7 @@ const SECTIONS = {
       <>
         <Line label="Mood set to">{effect.mood ?? "NEUTRAL"}</Line>
         {effect.expiresTurn != null && <Line label="Expires">turn {effect.expiresTurn}</Line>}
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           Undo restores whatever mood this replaced.
         </p>
       </>
@@ -286,21 +286,21 @@ export default function RequestPanel({ request, readOnly = false, onClose }) {
     <div className="modal-overlay" onClick={() => !pending && close()}>
       <div className="modal-panel" style={{ maxWidth: "36rem" }} onClick={(e) => e.stopPropagation()}>
         <div className="modal-header flex items-center justify-between gap-3">
-          <h2 className="text-lg font-bold">{readOnly ? "Request (read only)" : "Request"}</h2>
+          <h2 className="section-title">{readOnly ? "Request (read only)" : "Request"}</h2>
           <DevCharacterButton characterId={request.characterId} name={request.characterName} />
         </div>
 
         <div className="mt-3 flex flex-col gap-2">
           <Line label="Character">
             <CharacterLink characterId={request.characterId} name={request.characterName} isGm />{" "}
-            <span style={{ color: "var(--muted)" }}>({request.discordUsername})</span>
+            <span className="text-muted">({request.discordUsername})</span>
           </Line>
           <Line label="Faction">{request.factionName || "—"}</Line>
           <Line label="Turn">{request.turnLabel}</Line>
           <Line label="Type">{request.typeLabel}</Line>
           <Line label="Status">{request.statusLabel}</Line>
           <Line label="Reason">{request.reason}</Line>
-          <p className="text-xs" style={{ color: "var(--muted)" }}>
+          <p className="text-xs text-muted">
             To reduce GM load, players can make big changes.
           </p>
         </div>
@@ -330,7 +330,7 @@ export default function RequestPanel({ request, readOnly = false, onClose }) {
         </label>
 
         {error && (
-          <p className="mt-3 text-sm" style={{ color: "var(--accent)" }}>
+          <p className="mt-3 text-sm text-accent">
             {error}
           </p>
         )}

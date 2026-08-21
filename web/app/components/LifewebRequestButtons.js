@@ -74,8 +74,7 @@ export default function LifewebRequestButtons({ characters }) {
         </button>
         <button
           type="button"
-          className="btn-quiet"
-          style={{ color: "var(--accent)" }}
+          className="btn-danger"
           onClick={() => open("feed")}
         >
           ☠ Feed Person
@@ -108,14 +107,14 @@ export default function LifewebRequestButtons({ characters }) {
 
         {mode === "donate" && worth && (
           <p className="text-sm">
-            Worth <span style={{ color: "var(--positive)" }}>{worth.amount}</span> to the Lifeweb
+            Worth <span className="text-positive">{worth.amount}</span> to the Lifeweb
             {worth.tier ? (
-              <span style={{ color: "var(--muted)" }}> — {worth.tier} blood</span>
+              <span className="text-muted"> — {worth.tier} blood</span>
             ) : null}
           </p>
         )}
 
-        <p className="text-xs" style={{ color: "var(--muted)" }}>
+        <p className="text-xs text-muted">
           {spec?.hint}
         </p>
       </RequestDialog>

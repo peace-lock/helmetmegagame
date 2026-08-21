@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@lifeweb/db";
 import { getGmSession, listGuildMembers } from "@/lib/discordGuild";
 import PlayersTable from "./PlayersTable";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 export default async function PlayersPage() {
   const { session, isGm: gm } = await getGmSession();
@@ -25,8 +26,8 @@ export default async function PlayersPage() {
   );
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6 p-6 sm:p-8">
-      <h1 className="text-2xl font-bold">Players</h1>
+    <PageShell>
+      <PageHeader title="Players" />
       <PlayersTable
         characters={characters.map((c) => ({
           id: c.id,
@@ -40,6 +41,6 @@ export default async function PlayersPage() {
           resources: c.resources,
         }))}
       />
-    </div>
+    </PageShell>
   );
 }

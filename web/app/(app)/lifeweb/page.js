@@ -5,6 +5,7 @@ import { getGmSession } from "@/lib/discordGuild";
 import LifewebDonateBloodPanel from "../../components/LifewebDonateBloodPanel";
 import LifewebFeedPersonButton from "../../components/LifewebFeedPersonButton";
 import LifewebRequestButtons from "../../components/LifewebRequestButtons";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 function bloodBand(blood) {
   if (blood <= 0) return { label: "Dry", color: "var(--accent)" };
@@ -42,13 +43,13 @@ export default async function LifewebPage() {
   const band = bloodBand(blood);
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6 p-6 sm:p-8">
-      <h1 className="text-2xl font-bold">The Lifeweb</h1>
+    <PageShell width="narrow">
+      <PageHeader title="The Lifeweb" />
 
       <section className="panel p-5">
         <div className="flex items-baseline justify-between">
-          <h2 className="font-bold" style={{ color: band.color }}>{band.label}</h2>
-          <span className="text-sm" style={{ color: "var(--muted)" }}>{blood} / 100</span>
+          <h2 className="section-title" style={{ color: band.color }}>{band.label}</h2>
+          <span className="text-sm text-muted">{blood} / 100</span>
         </div>
 
         <div
@@ -67,9 +68,9 @@ export default async function LifewebPage() {
 
       {mortusCharacter && (
         <section className="panel p-5">
-          <h2 className="mb-3 font-bold">Tend the Web</h2>
+          <h2 className="panel-header">Tend the Web</h2>
           <LifewebRequestButtons characters={aliveCharacters} />
-          <p className="mt-3 text-xs" style={{ color: "var(--muted)" }}>
+          <p className="mt-3 text-xs text-muted">
             Both take effect at once. A GM reviews them afterwards and may undo or edit them.
           </p>
         </section>
@@ -77,12 +78,12 @@ export default async function LifewebPage() {
 
       {gm && (
         <section className="panel p-5">
-          <h2 className="mb-4 font-bold">GM Panel</h2>
+          <h2 className="panel-header">GM Panel</h2>
 
           <div className="flex flex-col gap-2">
             <h3 className="text-sm font-bold">Donate Blood</h3>
             {aliveCharacters.length === 0 ? (
-              <p className="text-sm" style={{ color: "var(--muted)" }}>No living characters.</p>
+              <p className="text-sm text-muted">No living characters.</p>
             ) : (
               <LifewebDonateBloodPanel characters={aliveCharacters} />
             )}
@@ -94,6 +95,6 @@ export default async function LifewebPage() {
           </div>
         </section>
       )}
-    </div>
+    </PageShell>
   );
 }

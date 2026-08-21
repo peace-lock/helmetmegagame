@@ -40,7 +40,7 @@ export default function StatusPanel({ character, isSelf, openTurn, parties }) {
 
   return (
     <section className="panel p-4">
-      <h2 className="mb-3 font-bold">Status</h2>
+      <h2 className="panel-header">Status</h2>
 
       <dl
         className="grid gap-x-4 gap-y-2"
@@ -56,7 +56,7 @@ export default function StatusPanel({ character, isSelf, openTurn, parties }) {
         <Row label="Mood">
           <span style={{ color: MOOD_COLORS[mood] }}>{moodLabel(mood)}</span>
           {turnsLeft != null && (
-            <span style={{ color: "var(--text)" }}>
+            <span className="text-default">
               ({turnsLeft} turn{turnsLeft === 1 ? "" : "s"} left)
             </span>
           )}
@@ -69,12 +69,12 @@ export default function StatusPanel({ character, isSelf, openTurn, parties }) {
               {total > 0 ? `+${total}` : total} to the die
             </span>
           ) : (
-            <span style={{ color: "var(--muted)" }}>No modifier</span>
+            <span className="text-muted">No modifier</span>
           )}
           {/* Spelled out only when more than one thing stacks — a lone Unhappy
               doesn't need "(−1 Unhappy)" next to "−1 to the die". */}
           {modifiers.length > 1 && (
-            <span style={{ color: "var(--muted)" }}>({formatGambitModifiers(modifiers)})</span>
+            <span className="text-muted">({formatGambitModifiers(modifiers)})</span>
           )}
         </Row>
 

@@ -44,10 +44,10 @@ export default function ConfirmProvider({ children }) {
         <div className="modal-overlay" onClick={() => settle(false)}>
           <div className="modal-panel" style={{ maxWidth: "24rem" }} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2 className="text-lg font-bold">{state.title}</h2>
+              <h2 className="section-title">{state.title}</h2>
             </div>
             {state.message && (
-              <p className="mt-3 text-sm" style={{ color: "var(--muted)" }}>
+              <p className="mt-3 text-sm text-muted">
                 {state.message}
               </p>
             )}

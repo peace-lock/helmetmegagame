@@ -60,7 +60,7 @@ export default function NotesList({ notes }) {
             <div className="flex items-start justify-between gap-3">
               <div className="flex flex-col">
                 <span className="font-bold">{note.characterName}</span>
-                <span className="text-xs" style={{ color: "var(--muted)" }}>
+                <span className="text-xs text-muted">
                   {note.zoneName ?? "-"} · {new Date(note.sentAt).toLocaleString()}
                 </span>
               </div>
@@ -79,7 +79,7 @@ export default function NotesList({ notes }) {
           </div>
         ))}
         {sorted.length === 0 && (
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
+          <p className="text-sm text-muted">
             No starred messages match these filters.
           </p>
         )}

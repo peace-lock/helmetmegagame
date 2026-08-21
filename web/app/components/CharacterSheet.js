@@ -8,6 +8,7 @@ import StatusPanel from "./StatusPanel";
 import TagRequestButtons from "./TagRequestButtons";
 import RichText from "./RichText";
 import FactionLink from "./FactionLink";
+import PageShell from "@/app/components/PageShell";
 
 // Fixed display order rather than alphabetical or catalog order — Status
 // (Mood, buffs/debuffs) belongs near the top, ahead of General/Skills.
@@ -43,7 +44,7 @@ function formatRoll(action) {
 }
 
 function ActionStatus({ currentAction, openTurn }) {
-  if (!openTurn) return <p className="text-sm" style={{ color: "var(--muted)" }}>No turn is currently open.</p>;
+  if (!openTurn) return <p className="text-sm text-muted">No turn is currently open.</p>;
 
   if (!currentAction) return null;
 
@@ -63,22 +64,22 @@ function ActionStatus({ currentAction, openTurn }) {
         {currentAction.opposed ? " (Opposed)" : ""}: {currentAction.description}
       </p>
       {currentAction.status === "PENDING_TYPE" && (
-        <p style={{ color: "var(--muted)" }}>Waiting on you to set Kind/Opposed and hit Confirm — check Discord DMs.</p>
+        <p className="text-muted">Waiting on you to set Kind/Opposed and hit Confirm — check Discord DMs.</p>
       )}
       {currentAction.status === "PENDING_OPPOSED" && (
-        <p style={{ color: "var(--muted)" }}>Waiting on you to say whether it&apos;s Opposed — check Discord DMs.</p>
+        <p className="text-muted">Waiting on you to say whether it&apos;s Opposed — check Discord DMs.</p>
       )}
       {currentAction.status === "PENDING" && (
-        <p style={{ color: "var(--muted)" }}>Pending confirmation — check Discord DMs and hit Confirm to lock it in.</p>
+        <p className="text-muted">Pending confirmation — check Discord DMs and hit Confirm to lock it in.</p>
       )}
       {currentAction.status === "CONFIRMED" && currentAction.moveReviewStatus !== "SOLVED" && (
-        <p style={{ color: "var(--muted)" }}>
+        <p className="text-muted">
           Confirmed{formatRoll(currentAction)} — awaiting GM review.
         </p>
       )}
       {(currentAction.status === "ADJUDICATED" || currentAction.moveReviewStatus === "SOLVED") && (
         <p>
-          <span style={{ color: "var(--positive)" }}>Solved</span>
+          <span className="text-positive">Solved</span>
         </p>
       )}
     </div>
@@ -101,7 +102,7 @@ export default function CharacterSheet({
   const tagGroups = groupTagsByCategory(character.tags);
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6 p-6 sm:p-8">
+    <PageShell width="wide">
       <div className="flex items-center gap-4">
         {avatarSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -115,22 +116,45 @@ export default function CharacterSheet({
           <div
             aria-hidden="true"
             className="h-16 w-16"
-            style={{ background: "#9a9a9a", borderRadius: "var(--radius)", border: "1px solid var(--border)" }}
+            style={{ background: "var(--field-bg)", borderRadius: "var(--radius)", border: "1px solid var(--border)" }}
           />
         )}
         <div>
           <h1 className="text-2xl font-bold">{character.name}</h1>
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
+          <p className="text-sm text-muted">
             {character.roleTitle ?? "No role"} —{" "}
             <FactionLink factionId={character.factionId} name={character.faction?.name ?? "No faction"} />
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      {/* Two explicit columns rather than letting panels flow into a grid.
+          Flowed, the columns end ragged, because these panels differ a lot in
+          height — the Bio form is several times the height of the status
+          block. Assigning by weight (identity/status left, the tall Bio form
+          right) keeps the two sides close in length at any content size. The
+          avatar/identity header above spans both. */}
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+        <div className="flex flex-col gap-6">
+          <StatusPanel
+            character={character}
+            isSelf={isSelf}
+            openTurn={openTurn}
+            parties={transferParties}
+          />
+
+          {!isSelf && currentAction && (
+            <section className="panel p-4">
+              <h2 className="panel-header">This turn</h2>
+              <ActionStatus currentAction={currentAction} openTurn={openTurn} />
+            </section>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-6">
         {isSelf && (
           <section className="panel p-4">
-            <h2 className="mb-3 font-bold">Bio</h2>
+            <h2 className="panel-header">Bio</h2>
             <form action={updateCharacterProfile} encType="multipart/form-data" className="flex flex-col gap-3">
               <label className="field">
                 <span className="field-label">Name</span>
@@ -150,31 +174,18 @@ export default function CharacterSheet({
 
         {!isSelf && character.appearance && (
           <section className="panel p-4">
-            <h2 className="mb-2 font-bold">Appearance</h2>
+            <h2 className="panel-header">Appearance</h2>
             <p className="text-sm">
               <RichText text={character.appearance} />
             </p>
           </section>
         )}
-
-        <StatusPanel
-          character={character}
-          isSelf={isSelf}
-          openTurn={openTurn}
-          parties={transferParties}
-        />
-
-      {!isSelf && currentAction && (
-        <section className="panel p-4">
-          <h2 className="mb-2 font-bold">This turn</h2>
-          <ActionStatus currentAction={currentAction} openTurn={openTurn} />
-        </section>
-      )}
+        </div>
       </div>
 
       <section className="panel p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-bold">Tags</h2>
+          <h2 className="section-title">Tags</h2>
           {isSelf && (
             <TagRequestButtons
               catalog={tagCatalog ?? []}
@@ -185,7 +196,7 @@ export default function CharacterSheet({
           )}
         </div>
         {tagGroups.length === 0 ? (
-          <p className="text-sm" style={{ color: "var(--muted)" }}>No tags yet.</p>
+          <p className="text-sm text-muted">No tags yet.</p>
         ) : (
           <div className="flex flex-col gap-3">
             {tagGroups.map(([category, tags]) => (
@@ -219,6 +230,6 @@ export default function CharacterSheet({
           location={character.location ?? null}
         />
       )}
-    </div>
+    </PageShell>
   );
 }

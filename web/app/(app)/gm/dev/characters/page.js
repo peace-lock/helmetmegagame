@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@lifeweb/db";
 import { auth } from "@/lib/auth";
 import { isSuperadmin } from "@/lib/superadmin";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 export default async function DevCharactersPage() {
   const session = await auth();
@@ -18,9 +19,9 @@ export default async function DevCharactersPage() {
   });
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6 p-6 sm:p-8">
+    <PageShell>
       <Link href="/gm/dev" className="btn-quiet">&larr; Back to Dev Panel</Link>
-      <h1 className="text-2xl font-bold">Characters ({characters.length})</h1>
+      <PageHeader title={`Characters (${characters.length})`} />
 
       <div className="panel overflow-x-auto">
         <table className="data-table">
@@ -49,7 +50,7 @@ export default async function DevCharactersPage() {
             ))}
             {characters.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center" style={{ color: "var(--muted)" }}>
+                <td colSpan={5} className="text-center text-muted">
                   No characters yet.
                 </td>
               </tr>
@@ -57,6 +58,6 @@ export default async function DevCharactersPage() {
           </tbody>
         </table>
       </div>
-    </div>
+    </PageShell>
   );
 }

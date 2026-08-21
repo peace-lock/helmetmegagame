@@ -134,7 +134,7 @@ export default function PlayersTable({ characters }) {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={8} className="text-center" style={{ color: "var(--muted)" }}>
+                <td colSpan={8} className="text-center text-muted">
                   No characters match these filters.
                 </td>
               </tr>

@@ -1,37 +1,191 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Design tokens — "Ravenheart Underground"
+
+   Ravenheart is underground (docs/lore.md: humans "forced into the caves").
+   So neither phase is a daylight theme: Dusk and Dawn differ by lamplight
+   temperature and lift, not by sun. Limestone is a light theme kept as a
+   comparison backup — see [data-theme="limestone"] below.
+
+   Every colour pair here was solved against WCAG AA. Two rules carry the
+   whole system and are easy to undo by accident:
+
+     1. The surface ladder (--bg -> --surface -> --surface-raised) must keep
+        at least ~1.20 contrast per step, or .panel goes invisible again —
+        it was 1.08 before this, which is why the app read as one flat sheet.
+     2. --accent and --accent-text are DIFFERENT COLOURS on purpose. One ember
+        token cannot be both a legible text colour and a rich fill. Use
+        --accent for fills and rules, --accent-text for text and outlines.
+        Collapsing them back into one is what made every button fail AA.
+   ========================================================================== */
+
 :root {
-  --radius: 4px;
+  /* Type scale — modular ~1.2, anchored at a real 15px body. Before this the
+     app had ten sizes all between 0.6 and 0.9rem and no mid-tier at all. */
+  --fs-2xs: 0.6875rem; /* 11px — rail labels, micro-captions */
+  --fs-xs: 0.75rem; /* 12px — table headers, chips, field labels */
+  --fs-sm: 0.8125rem; /* 13px — dense table body */
+  --fs-base: 0.9375rem; /* 15px — BODY */
+  --fs-md: 1.0625rem; /* 17px — lead paragraphs */
+  --fs-lg: 1.25rem; /* 20px — h3 / panel titles */
+  --fs-xl: 1.5rem; /* 24px — h2 */
+  --fs-2xl: 1.875rem; /* 30px — h1 */
+  --fs-3xl: 2.5rem; /* 40px — wordmark */
+
+  /* Two letter-spacings, down from six ad-hoc values. */
+  --ls-tight: 0.02em; /* display faces */
+  --ls-wide: 0.06em; /* uppercase micro-labels */
+
+  --lh-heading: 1.25;
+  --lh-body: 1.55;
+  --lh-table: 1.4;
+
+  /* 4px spacing scale, replacing 14 ad-hoc padding values. */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* Radius ladder, replacing the single --radius: 4px. */
+  --r-sm: 3px; /* chips, inputs, icon buttons */
+  --r-md: 6px; /* panels, cards */
+  --r-lg: 10px; /* modals */
+  --r-full: 999px; /* pills */
+  --radius: var(--r-md); /* legacy alias — pre-existing call sites */
+
+  /* Elevation. --e-1 is border-only and intentionally has no shadow. */
+  --e-2: 0 2px 6px var(--shadow-color);
+  --e-3: 0 12px 32px var(--shadow-color);
 }
 
-/* Dusk: cooling embers — near-black teal ground, cool blue-grey structure,
-   warm beige text, terracotta held back for accents only. */
+/* Dusk — banked coals. Deep, cool, near-black with a green-teal cast. */
 [data-theme="dusk"] {
-  --bg: #0b1614;
-  --panel-bg: #131f1c;
-  --field-bg: rgba(139, 168, 172, 0.07);
-  --border: rgba(139, 168, 172, 0.28);
-  --muted: #a89a7c;
-  --text: #f0e9d8;
-  --accent: #c9552b;
-  --positive: #7fa87a;
-  --warning: #d08a3c;
-  --row-hover: rgba(255, 255, 255, 0.04);
+  --bg: #111e1b;
+  --surface: #1e352f;
+  --surface-raised: #27443e;
+  --panel-bg: var(--surface); /* legacy alias */
+  --field-bg: rgba(0, 0, 0, 0.22); /* recessed BELOW the surface, not another panel */
+  --border: rgba(168, 198, 194, 0.31);
+  --text: #efe7d6;
+  --muted: #9daca6;
+  --accent: #c8542a;
+  --accent-text: #e8814f;
+  --accent-solid: #a8431a;
+  --on-accent: #efe7d6;
+  --positive: #7fb27a;
+  --warning: #d9973f;
+  --danger: #ee7f6b;
+  --row-hover: rgba(255, 255, 255, 0.05);
+  --shadow-color: rgba(0, 0, 0, 0.45);
 }
 
-/* Dawn: the same fire at first light — bright warm parchment ground, same
-   cool blue-grey structure and terracotta accent, inverted for contrast. */
+/* Dawn — lamps up. Not daylight: a warmer, lifted dark with brighter ember. */
 [data-theme="dawn"] {
-  --bg: #ede4cc;
-  --panel-bg: #e6dcc0;
-  --field-bg: rgba(90, 120, 122, 0.07);
-  --border: rgba(90, 120, 122, 0.32);
-  --muted: #7d7259;
-  --text: #2c332f;
-  --accent: #b8481f;
-  --positive: #4f6b46;
-  --warning: #a35f13;
-  --row-hover: rgba(0, 0, 0, 0.03);
+  --bg: #1b1512;
+  --surface: #362a24;
+  --surface-raised: #46372d;
+  --panel-bg: var(--surface);
+  --field-bg: rgba(0, 0, 0, 0.2);
+  --border: rgba(224, 203, 172, 0.28);
+  --text: #f3eada;
+  --muted: #b3a390;
+  --accent: #d2691e;
+  --accent-text: #ee9a5c;
+  --accent-solid: #a8431a;
+  --on-accent: #f3eada;
+  --positive: #8cb77f;
+  --warning: #e0a34a;
+  --danger: #e87a62;
+  --row-hover: rgba(255, 255, 255, 0.05);
+  --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Limestone — the light-theme backup, kept for comparison rather than wired
+   in by phase. It is never what themeForPhase() returns; reach it by setting
+   LIFEWEB_THEME=limestone (see web/app/layout.js). Worth keeping around
+   because its ground->surface separation (1.53) beats either dark theme —
+   light themes simply have more luminance headroom to spend.
+
+   One deliberate exception to the ladder rule at the top of this file: the
+   surface here is already near-white, so there is no headroom left above it
+   and --surface-raised cannot separate by luminance (white over #FBFAF7 is
+   1.04). In a light theme that tier is carried by SHADOW instead — --e-3 on
+   .modal-panel and .tag-tooltip — which is how light UIs conventionally lift
+   a modal off a card. Do not "fix" this by darkening --surface: that turns
+   crisp paper into muddy grey and costs the 1.53 ground separation. */
+[data-theme="limestone"] {
+  --bg: #d2ccc0;
+  --surface: #fbfaf7;
+  --surface-raised: #ffffff;
+  --panel-bg: var(--surface);
+  --field-bg: rgba(0, 0, 0, 0.05);
+  --border: rgba(74, 66, 56, 0.39);
+  --text: #22201c;
+  --muted: #5f5952;
+  --accent: #a8431a;
+  --accent-text: #8f3814;
+  --accent-solid: #a8431a;
+  --on-accent: #ffffff;
+  --positive: #3f5c38;
+  --warning: #7a4a0f;
+  --danger: #9b3324;
+  --row-hover: rgba(0, 0, 0, 0.035);
+  --shadow-color: rgba(40, 34, 28, 0.18);
+}
+
+/* Bridge the tokens into Tailwind. Without this the app runs two disconnected
+   systems — colours in CSS vars (reached via inline style objects) and sizes
+   in Tailwind's stock defaults (text-sm/text-xs) — which is the structural
+   reason the type scale drifted and 162 inline style objects exist purely to
+   name a colour. Declaring them here makes `text-muted`, `bg-surface` and
+   friends real utilities, and silently re-points the 118 existing
+   text-sm/text-xs call sites at the scale above. */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-field: var(--field-bg);
+  --color-default: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent-text);
+  --color-accent-fill: var(--accent);
+  --color-positive: var(--positive);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-hairline: var(--border);
+
+  /* Each size is paired with its line-height. Tailwind's `text-*` utilities
+     emit `line-height: var(--tw-leading, var(--text-<size>--line-height))`, so
+     overriding a size without its companion would leave the utility falling
+     back to Tailwind's stock ratio — which was computed against the size we
+     just replaced. Unitless, so they scale with the font-size. */
+  --text-2xs: var(--fs-2xs);
+  --text-2xs--line-height: var(--lh-table);
+  --text-xs: var(--fs-xs);
+  --text-xs--line-height: var(--lh-table);
+  --text-sm: var(--fs-sm);
+  --text-sm--line-height: var(--lh-table);
+  --text-base: var(--fs-base);
+  --text-base--line-height: var(--lh-body);
+  --text-md: var(--fs-md);
+  --text-md--line-height: var(--lh-body);
+  --text-lg: var(--fs-lg);
+  --text-lg--line-height: var(--lh-heading);
+  --text-xl: var(--fs-xl);
+  --text-xl--line-height: var(--lh-heading);
+  --text-2xl: var(--fs-2xl);
+  --text-2xl--line-height: var(--lh-heading);
+  --text-3xl: var(--fs-3xl);
+  --text-3xl--line-height: var(--lh-heading);
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
 }
 
 html,
@@ -42,17 +196,33 @@ body {
 body {
   margin: 0;
   color: var(--text);
-  font-family: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+  /* Source Sans 3, not the mono. Mono as body text was wallpaper: it made
+     every dense GM table wider and harder to read, and left the mono itself
+     with no meaning. It now signifies "machine record" — see .mono below. */
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
   background: var(--bg);
 }
 
-/* Headings read in the serif; everything else (chrome, tables, forms,
-   buttons) stays in the mono — the two "main" fonts described in the
-   design doc. */
+/* Headings read in the serif. Source Serif 4 and Source Sans 3 are a designed
+   superfamily, so they share metrics and vertical rhythm for free. h3 is
+   included now that a real --fs-lg exists for panel titles to sit at. */
 h1,
-h2 {
+h2,
+h3 {
   font-family: var(--font-serif), Georgia, serif;
   font-optical-sizing: auto;
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-tight);
+}
+
+/* Mono is now opt-in and means one thing: machine record. Numbers, resources,
+   dice, IDs, timestamps, audit rows — anything a human reads as data rather
+   than as prose. Applied by .data-table's numeric columns and by hand. */
+.mono {
+  font-family: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+  font-variant-numeric: tabular-nums;
 }
 
 /* Gothic display face, reserved for a handful of thematic moments (the
@@ -76,26 +246,71 @@ h2 {
   background: var(--accent);
 }
 
-/* A faint, static scanline texture — no flicker/animation. */
-.scanlines {
+/* Atmosphere. The old .scanlines lived here — a 1px repeating-linear-gradient
+   at 0.06 opacity, i.e. not actually visible, paying a compositing cost for
+   nothing. These two read as material rather than as a filter.
+
+   Guardrails, both deliberate: no backdrop-filter anywhere, and no animation.
+   Each is one fixed pointer-events:none layer that composites a single time. */
+.grain,
+.vignette {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.25) 0px,
-    rgba(0, 0, 0, 0.25) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  opacity: 0.06;
 }
 
+/* Inline SVG turbulence as a data URI — no network request, no image asset. */
+.grain {
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Sells "underground" by darkening the edges, without touching legibility in
+   the centre where content actually sits. */
+.vignette {
+  background: radial-gradient(ellipse at center, transparent 55%, var(--shadow-color) 100%);
+  opacity: 0.55;
+}
+
+/* The single most-used structural device in the app (68 call sites) and,
+   before this, very nearly invisible: bg->panel contrast was 1.08. It now
+   sits on --surface with a hairline that actually reads (~2.0).
+
+   Deliberately NO default padding, and not as a deferral — it shouldn't have
+   one. `.panel` is used two ways: as a padded card (`panel p-4`, and p-3/p-5
+   where the density differs) and as an UNPADDED frame around something that
+   fills it edge to edge (`panel overflow-x-auto`, `panel table-scroll`). A
+   default would put an unwanted inset around every table. Padding stays at
+   the call site, where the two cases are distinguishable.
+
+   Related trap if you ever reconsider: this rule is unlayered while Tailwind's
+   utilities live in @layer utilities, and unlayered CSS outranks any layer, so
+   a `padding` here would silently beat the p-* the call sites pass rather than
+   losing to it. */
 .panel {
   border: 1px solid var(--border);
-  background: var(--panel-bg);
-  border-radius: var(--radius);
+  background: var(--surface);
+  border-radius: var(--r-md);
+}
+
+/* A proper section header, replacing the bare `h2.mb-3.font-bold` that had six
+   different ad-hoc treatments across 28 call sites — 22 of which carried no
+   size at all and so inherited body size. */
+.panel-header {
+  display: block;
+  margin: 0 0 var(--sp-3);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: var(--fs-lg);
+  line-height: var(--lh-heading);
+}
+
+.panel-header--with-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .markdown-content p {
@@ -154,30 +369,54 @@ h2 {
 
 .menu-item:hover,
 .menu-item:focus-visible {
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: underline;
-  text-decoration-color: var(--accent);
+  text-decoration-color: var(--accent-text);
   text-decoration-thickness: 2px;
   text-underline-offset: 5px;
 }
 
+/* Every interactive class gets this. There were only four :focus-visible rules
+   in the whole stylesheet before, and each merely changed a colour — so the
+   app had no visible focus ring at all, including on all 156 .field inputs. */
+.btn:focus-visible,
+.btn-secondary:focus-visible,
+.btn-danger:focus-visible,
+.btn-quiet:focus-visible,
+.icon-btn:focus-visible,
+.field input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible,
+.text-input:focus-visible,
+.menu-item:focus-visible,
+.rail-item:focus-visible,
+.tab-item:focus-visible,
+.status-link:focus-visible,
+.th-sort:focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+/* Primary action: a real solid fill. This is the biggest single visual change
+   in the redesign and it lands on all 73 .btn call sites at once.
+   --accent-solid + --on-accent is 4.90 (dusk) / 5.05 (dawn) / 6.03 (limestone).
+   The old outline .btn used --accent as its TEXT colour at 3.86, which meant
+   every button in the app failed AA. */
 .btn {
   all: unset;
   cursor: pointer;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  background: transparent;
+  border: 1px solid var(--accent-solid);
+  background: var(--accent-solid);
+  color: var(--on-accent);
   padding: 7px 14px;
-  border-radius: var(--radius);
-  font-size: 0.8rem;
-  letter-spacing: 0.04em;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
   text-align: center;
 }
 
-.btn:hover,
-.btn:focus-visible {
-  color: var(--text);
-  background: var(--accent);
+.btn:hover {
+  filter: brightness(1.12);
 }
 
 .btn:disabled {
@@ -185,10 +424,58 @@ h2 {
   cursor: not-allowed;
 }
 
+.btn:disabled:hover {
+  filter: none;
+}
+
+/* The old outline look, kept for secondary actions — but drawn in
+   --accent-text so it passes AA where the original did not. */
+.btn-secondary {
+  all: unset;
+  cursor: pointer;
+  border: 1px solid var(--accent-text);
+  color: var(--accent-text);
+  background: transparent;
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  text-align: center;
+}
+
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--accent-text) 14%, transparent);
+}
+
+.btn-secondary:disabled,
+.btn-danger:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Destructive actions — Reject, Kill, Restart Game — which until now reused
+   --accent and so looked identical to a primary action. */
+.btn-danger {
+  all: unset;
+  cursor: pointer;
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  background: transparent;
+  padding: 7px 14px;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  text-align: center;
+}
+
+.btn-danger:hover {
+  background: color-mix(in srgb, var(--danger) 16%, transparent);
+}
+
 .status-link {
   all: unset;
   cursor: pointer;
-  color: var(--accent);
+  color: var(--accent-text);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
@@ -205,12 +492,12 @@ h2 {
   all: unset;
   cursor: pointer;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: var(--fs-xs);
   padding: 4px 0;
 }
 
 .btn-quiet:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .btn-quiet:disabled {
@@ -225,14 +512,14 @@ h2 {
 .field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  font-size: 0.85rem;
+  gap: var(--sp-1);
+  font-size: var(--fs-sm);
 }
 
 .field-label {
   color: var(--muted);
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
   text-transform: uppercase;
 }
 
@@ -246,9 +533,9 @@ h2 {
   border: 1px solid var(--border);
   color: var(--text);
   padding: 8px 10px;
-  border-radius: var(--radius);
+  border-radius: var(--r-sm);
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: var(--fs-base);
 }
 
 .field textarea {
@@ -257,12 +544,12 @@ h2 {
 
 .char-counter {
   align-self: flex-end;
-  font-size: 0.68rem;
+  font-size: var(--fs-2xs);
   color: var(--muted);
 }
 
 .char-counter[data-at-limit="true"] {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .text-input {
@@ -270,9 +557,9 @@ h2 {
   border: 1px solid var(--border);
   color: var(--text);
   padding: 8px 10px;
-  border-radius: var(--radius);
+  border-radius: var(--r-sm);
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: var(--fs-base);
 }
 
 .chip {
@@ -282,9 +569,9 @@ h2 {
   background: var(--field-bg);
   color: var(--text);
   padding: 3px 9px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  letter-spacing: 0.03em;
+  border-radius: var(--r-full);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-tight);
 }
 
 /* Universal tag hover tooltip — wraps a .chip, shows name/description/value.
@@ -309,14 +596,14 @@ h2 {
   width: max-content;
   max-width: 240px;
   border: 1px solid var(--border);
-  background: var(--panel-bg);
-  border-radius: var(--radius);
+  background: var(--surface-raised);
+  border-radius: var(--r-md);
   padding: 8px 10px;
-  font-family: var(--font-mono), ui-monospace, "SFMono-Regular", monospace;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   font-weight: normal;
-  font-size: 0.75rem;
-  line-height: 1.4;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-table);
+  box-shadow: var(--e-3);
 }
 
 .tag-tooltip strong {
@@ -343,7 +630,7 @@ h2 {
   border-radius: 50%;
   border: 1px solid var(--muted);
   color: var(--muted);
-  font-size: 0.65rem;
+  font-size: var(--fs-2xs);
   line-height: 1;
   cursor: default;
 }
@@ -366,9 +653,10 @@ h2 {
   max-height: 85vh;
   overflow-y: auto;
   border: 1px solid var(--border);
-  background: var(--panel-bg);
-  border-radius: var(--radius);
-  padding: 16px;
+  background: var(--surface-raised);
+  border-radius: var(--r-lg);
+  box-shadow: var(--e-3);
+  padding: var(--sp-4);
 }
 
 .modal-header {
@@ -376,6 +664,18 @@ h2 {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+/* Same serif and size as .panel-header, deliberately without the hairline
+   rule. Use it wherever the heading is a flex child sitting beside something
+   else — a modal title next to its close button, a status band next to its
+   value — because there a border-bottom underlines the title text instead of
+   spanning the container, which reads as an underline, not a divider. */
+.section-title {
+  margin: 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: var(--fs-lg);
+  line-height: var(--lh-heading);
 }
 
 @keyframes shake {
@@ -399,7 +699,7 @@ h2 {
   all: unset;
   cursor: pointer;
   padding: 6px 12px;
-  font-size: 0.75rem;
+  font-size: var(--fs-xs);
   letter-spacing: 0.03em;
   color: var(--muted);
   border-bottom: 2px solid transparent;
@@ -410,8 +710,8 @@ h2 {
 }
 
 .tab-item[data-active="true"] {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
+  color: var(--accent-text);
+  border-bottom-color: var(--accent-text);
 }
 
 .store-list {
@@ -435,14 +735,22 @@ h2 {
 }
 
 .store-row-name {
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
   font-weight: 600;
 }
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-table);
+}
+
+/* Numeric columns keep the mono, so figures line up and read as data. Mark
+   the cells with class="mono" (or wrap the value) — it is no longer the
+   default now that the body face is Source Sans. */
+.data-table .mono {
+  font-variant-numeric: tabular-nums;
 }
 
 .data-table th {
@@ -452,13 +760,13 @@ h2 {
   color: var(--muted);
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.68rem;
-  letter-spacing: 0.05em;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
   white-space: nowrap;
 }
 
 .data-table td {
-  padding: 8px 10px;
+  padding: var(--sp-2) var(--sp-3);
   border-bottom: 1px solid var(--border);
   vertical-align: top;
 }
@@ -487,7 +795,7 @@ h2 {
   position: sticky;
   top: 0;
   z-index: 1;
-  background: var(--panel-bg);
+  background: var(--surface-raised);
 }
 
 /* Sortable column headers — a button that inherits the th's own type styling
@@ -523,7 +831,7 @@ h2 {
 .icon-btn:hover {
   color: var(--text);
   background: var(--row-hover);
-  border-color: var(--accent);
+  border-color: var(--accent-text);
 }
 
 .icon-btn:disabled {
@@ -544,11 +852,15 @@ h2 {
   flex-direction: column;
   align-items: stretch;
   gap: 2px;
-  width: 84px;
+  /* 92px, up from 84px, to give the labels room now that they are 11px rather
+     than 9.6px. The mobile bottom-bar crowding (a GM has up to nine items on a
+     390px viewport, ~39px each, under the 44px touch minimum) is the other
+     half of this and needs a "More" sheet — that lands with the page pass. */
+  width: 92px;
   flex-shrink: 0;
   padding: 18px 0;
   border-right: 1px solid var(--border);
-  background: var(--panel-bg);
+  background: var(--surface);
   position: sticky;
   top: 0;
   height: 100dvh;
@@ -568,7 +880,7 @@ h2 {
   padding: 10px 4px;
   text-decoration: none;
   color: var(--muted);
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   border: none;
@@ -583,11 +895,11 @@ h2 {
 }
 
 .rail-item:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .rail-item[data-active="true"] {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .rail-signout {
@@ -600,12 +912,21 @@ h2 {
   bottom: 16px;
   z-index: 20;
   border: 1px solid var(--border);
-  background: var(--panel-bg);
+  background: var(--surface-raised);
+  box-shadow: var(--e-2);
   padding: 6px 12px;
-  font-size: 0.68rem;
+  font-size: var(--fs-2xs);
   letter-spacing: 0.08em;
   border-radius: var(--radius);
   color: var(--text);
+}
+
+/* The mobile bottom bar's overflow affordance. On desktop the rail is a tall
+   column with room for every item, so neither the More button nor its sheet
+   has any business existing — see NavRail.js. */
+.rail-more,
+.nav-sheet-overlay {
+  display: none;
 }
 
 @media (max-width: 720px) {
@@ -626,16 +947,85 @@ h2 {
     padding-bottom: 72px;
   }
 
+  /* Items past NavRail's MOBILE_PRIMARY cap live in the sheet instead. */
+  .rail-item--overflow {
+    display: none;
+  }
+
+  .rail-more {
+    display: flex;
+  }
+
+  /* Share the width evenly and let labels shrink. Without this the items size
+     to their text and the widest one ("Adjudicate") pushes More off-screen —
+     the bar does not scroll, so the overflow is simply unreachable. */
+  .app-rail .rail-item {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 8px 2px;
+    /* The rail's 0.05em tracking costs ~10% of the label width, which is the
+       difference between fitting six targets on a 390px viewport and not. */
+    letter-spacing: normal;
+    font-size: 10px;
+  }
+
+  .app-rail .rail-item span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Sign out moves into the sheet on mobile rather than taking one of the
+     few touch targets the bottom bar has. */
   .rail-signout {
-    margin-top: 0;
-    margin-left: auto;
-    width: auto;
+    display: none;
+  }
+
+  .nav-sheet-overlay {
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+    /* Above the bottom bar (z-index 30) but using the shared overlay scrim. */
+    z-index: 40;
+  }
+
+  .nav-sheet {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--surface-raised);
+    border-top: 1px solid var(--border);
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    box-shadow: var(--e-3);
+    padding: var(--sp-3) var(--sp-3) calc(var(--sp-3) + env(safe-area-inset-bottom, 0px));
+  }
+
+  .nav-sheet-item {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-3);
+    /* Comfortably over the 44px touch minimum the bottom bar was under. */
+    min-height: 48px;
+    border-radius: var(--r-sm);
+  }
+
+  .nav-sheet-item svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+
+  .nav-sheet-item[data-active="true"] {
+    color: var(--accent-text);
   }
 
   .turn-chip {
     bottom: 76px;
     right: 10px;
-    font-size: 0.62rem;
+    font-size: var(--fs-2xs);
     padding: 4px 8px;
   }
 }

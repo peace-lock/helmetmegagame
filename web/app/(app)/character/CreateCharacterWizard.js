@@ -59,15 +59,15 @@ function RoleCard({ role, cap, taken, selected, disabled, onSelect }) {
         </span>
       </span>
       {role.intro && (
-        <span className="text-sm" style={{ color: "var(--muted)" }}>
+        <span className="text-sm text-muted">
           {role.intro}
         </span>
       )}
-      <span className="flex flex-wrap gap-2 text-xs" style={{ color: "var(--muted)" }}>
+      <span className="flex flex-wrap gap-2 text-xs text-muted">
         {role.difficulty && <span className="chip">{role.difficulty}</span>}
         {role.startingLocationName && <span className="chip">{role.startingLocationName}</span>}
         {role.extraStartingPoints > 0 && (
-          <span className="chip" style={{ color: "var(--positive)" }}>
+          <span className="chip text-positive">
             +{role.extraStartingPoints} pts
           </span>
         )}
@@ -138,14 +138,14 @@ export default function CreateCharacterWizard({ zones, tags, startingTagPoints, 
       <StepBar step={step} />
 
       {cursed && (
-        <p className="panel p-3 text-sm" style={{ color: "var(--accent)" }}>
+        <p className="panel p-3 text-sm text-accent">
           You&apos;re <strong>Cursed</strong>! You can only be a Bum or a Migrant, and you suffer -3 to
           starting points. Wait until someone buries your body.
         </p>
       )}
 
       {error && (
-        <p className="panel p-3 text-sm" role="alert" style={{ color: "var(--accent)" }}>
+        <p className="panel p-3 text-sm text-danger" role="alert">
           {error}
         </p>
       )}
@@ -178,10 +178,10 @@ export default function CreateCharacterWizard({ zones, tags, startingTagPoints, 
         <div className="flex flex-col gap-6">
           {zones.map((zone) => (
             <section key={zone.id} className="flex flex-col gap-3">
-              <h2 className="text-lg font-bold">{zone.name}</h2>
+              <h2 className="panel-header">{zone.name}</h2>
               {zone.factions.map((faction) => (
                 <div key={faction.id} className="flex flex-col gap-2">
-                  <h3 className="text-sm font-bold" style={{ color: "var(--muted)" }}>
+                  <h3 className="text-sm font-bold text-muted">
                     {faction.name}
                   </h3>
                   <div className="grid gap-2 sm:grid-cols-2">
@@ -209,11 +209,11 @@ export default function CreateCharacterWizard({ zones, tags, startingTagPoints, 
           <div className="panel flex flex-col gap-2 p-3 text-sm">
             <span>
               <strong>{role.name}</strong>
-              <span style={{ color: "var(--muted)" }}> — {role.factionName}</span>
+              <span className="text-muted"> — {role.factionName}</span>
             </span>
             {grantedTags.length > 0 && (
               <span className="flex flex-wrap items-center gap-2">
-                <span style={{ color: "var(--muted)" }}>Granted free:</span>
+                <span className="text-muted">Granted free:</span>
                 {grantedTags.map((t) => (
                   <span key={t.id} className="chip">
                     {t.name}
@@ -235,27 +235,27 @@ export default function CreateCharacterWizard({ zones, tags, startingTagPoints, 
 
       {step === 3 && role && (
         <div className="panel flex flex-col gap-3 p-4">
-          <h2 className="text-lg font-bold">{name}</h2>
+          <h2 className="panel-header">{name}</h2>
           <dl className="grid gap-2 text-sm sm:grid-cols-2">
             <div>
-              <dt style={{ color: "var(--muted)" }}>Role</dt>
+              <dt className="text-muted">Role</dt>
               <dd>{role.name}</dd>
             </div>
             <div>
-              <dt style={{ color: "var(--muted)" }}>Faction</dt>
+              <dt className="text-muted">Faction</dt>
               <dd>{role.factionName}</dd>
             </div>
             <div>
-              <dt style={{ color: "var(--muted)" }}>Starts at</dt>
+              <dt className="text-muted">Starts at</dt>
               <dd>{role.startingLocationName ?? "Nowhere yet"}</dd>
             </div>
             <div>
-              <dt style={{ color: "var(--muted)" }}>Resources</dt>
+              <dt className="text-muted">Resources</dt>
               <dd>{role.startingResources} ⬢</dd>
             </div>
           </dl>
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span style={{ color: "var(--muted)" }}>Tags:</span>
+            <span className="text-muted">Tags:</span>
             {[...grantedTags, ...selectedTags].map((t) => (
               <span key={t.id} className="chip">
                 {t.name}
@@ -267,10 +267,10 @@ export default function CreateCharacterWizard({ zones, tags, startingTagPoints, 
               </span>
             ))}
             {grantedTags.length + selectedTags.length === 0 && (
-              <span style={{ color: "var(--muted)" }}>none</span>
+              <span className="text-muted">none</span>
             )}
           </div>
-          <p className="text-sm" style={{ color: "var(--muted)" }}>
+          <p className="text-sm text-muted">
             {remaining} unspent point{remaining === 1 ? "" : "s"} will carry over to your character.
           </p>
           {role.grantsLeader && (

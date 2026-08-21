@@ -88,16 +88,16 @@ export default function PointBuy({
           ))}
         </div>
         <div className="text-sm" aria-live="polite">
-          <span style={{ color: "var(--muted)" }}>Points remaining </span>
+          <span className="text-muted">Points remaining </span>
           <strong style={{ color: remaining < 0 ? "var(--accent)" : "var(--text)" }}>
             {remaining}
           </strong>
-          <span style={{ color: "var(--muted)" }}> / {budget}</span>
+          <span className="text-muted"> / {budget}</span>
         </div>
       </div>
 
       {remaining < 0 && (
-        <p className="text-sm" style={{ color: "var(--accent)" }}>
+        <p className="text-sm text-accent">
           You&apos;re over budget by {Math.abs(remaining)}. Drop something to continue.
         </p>
       )}
@@ -150,18 +150,18 @@ export default function PointBuy({
                       {formatCost(cost)}
                     </span>
                     {tag.group?.name && (
-                      <span className="text-xs" style={{ color: "var(--muted)" }}>
+                      <span className="text-xs text-muted">
                         {tag.group.name}
                       </span>
                     )}
                   </span>
                   {tag.description && (
-                    <span className="text-sm" style={{ color: "var(--muted)" }}>
+                    <span className="text-sm text-muted">
                       {tag.description}
                     </span>
                   )}
                   {formatTagRequirement(tag) && (
-                    <span className="text-sm" style={{ color: "var(--muted)" }}>
+                    <span className="text-sm text-muted">
                       {formatTagRequirement(tag)}
                     </span>
                   )}
@@ -173,7 +173,7 @@ export default function PointBuy({
       </ul>
 
       {visible.length === 0 && (
-        <p className="text-sm" style={{ color: "var(--muted)" }}>
+        <p className="text-sm text-muted">
           Nothing available in this category.
         </p>
       )}

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { prisma } from "@lifeweb/db";
 import { getGmSession, listGuildMembers } from "@/lib/discordGuild";
 import MessagesToolbar from "./MessagesToolbar";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 export default async function MessagesPage() {
   const { session, isGm: gm } = await getGmSession();
@@ -44,11 +45,11 @@ export default async function MessagesPage() {
   );
 
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6 p-6 sm:p-8">
-      <h1 className="text-2xl font-bold">Messages</h1>
-      <p className="text-sm" style={{ color: "var(--muted)" }}>
-        Every direct message the bot has sent or received, grouped by player.
-      </p>
+    <PageShell width="narrow">
+      <PageHeader
+        title="Messages"
+        subtitle="Every direct message the bot has sent or received, grouped by player."
+      />
 
       <MessagesToolbar characters={aliveCharacters} />
 
@@ -84,7 +85,7 @@ export default async function MessagesPage() {
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={3} className="text-center" style={{ color: "var(--muted)" }}>
+                <td colSpan={3} className="text-center text-muted">
                   No direct messages yet.
                 </td>
               </tr>
@@ -92,6 +93,6 @@ export default async function MessagesPage() {
           </tbody>
         </table>
       </div>
-    </div>
+    </PageShell>
   );
 }

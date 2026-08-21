@@ -17,8 +17,22 @@ export function describeTurn(turn) {
   return { day, phase: turn.phase, weather: turn.weather, label: `DAY ${day} · ${turn.phase} · ${weatherLabel}` };
 }
 
+// The themes globals.css defines. Both phase themes are underground darks;
+// "limestone" is the light-theme backup and is deliberately NOT reachable from
+// a phase — only via the LIFEWEB_THEME override below.
+export const THEMES = ["dusk", "dawn", "limestone"];
+
 export function themeForPhase(phase) {
   return phase === "DUSK" ? "dusk" : "dawn";
+}
+
+// Lets a whole environment be pinned to one theme regardless of the turn, so
+// limestone can actually be looked at and compared side by side — without it
+// there is no way to reach a theme that no phase maps to. Unset (the normal
+// case) or unrecognised falls straight through to the phase theme, so a typo
+// degrades to correct behaviour rather than an unstyled page.
+export function resolveTheme(phase, override) {
+  return THEMES.includes(override) ? override : themeForPhase(phase);
 }
 
 // "Turn 1, Dusk" — the raw sequential turn number (not the day/2 grouping

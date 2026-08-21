@@ -68,21 +68,36 @@ For any "are you sure?" moment in the web app, use the shared confirm dialog ins
 
 Source of truth for exact values is `web/app/globals.css` and the font setup in `web/app/layout.js` — this section is a map of what's there and the rules for using it, not a copy of the values themselves (keep it that way; don't let this drift into a duplicate that can go stale).
 
-**Fonts** — three faces loaded via `next/font/google` in `layout.js`, exposed as CSS variables on `<html>`:
-- `--font-mono` (IBM Plex Mono) is the app default, set on `body`. Everything (chrome, tables, forms, buttons) stays in this unless a rule below says otherwise.
-- `--font-serif` (Source Serif 4) is applied automatically to every `h1`/`h2` by a global CSS rule — never hand-apply a font class to a heading, just use the tag.
+**Fonts** — four faces loaded via `next/font/google` in `layout.js`, exposed as CSS variables on `<html>`:
+- `--font-sans` (Source Sans 3) is the app default, set on `body`. Chrome, tables, forms, buttons and prose all sit here unless a rule below says otherwise.
+- `--font-mono` (IBM Plex Mono) is **data only** — numbers, resources, dice, IDs, timestamps, audit rows. Opt in with the `.mono` class. It used to be the body face, which made it wallpaper: dense GM tables were wider and harder to read, and the mono itself signalled nothing. Don't reach for it for prose.
+- `--font-serif` (Source Serif 4) is applied automatically to every `h1`/`h2`/`h3` by a global CSS rule — never hand-apply a font class to a heading, just use the tag. It and Source Sans 3 are a designed superfamily, so they share metrics for free.
 - `--font-display` (UnifrakturMaguntia, a gothic/blackletter face) is reserved for a handful of thematic moments — the login wordmark and a couple of flavor-heavy titles — via `.font-display`/`.wordmark`. Never use it for bulk headings, loading-state text, or arbitrary player-authored content; it's illegible at small sizes and reads as a mismatch everywhere else (this is the mistake fixed on the `/lifeweb` panel's `loading.js`).
 
-**Colors** — entirely CSS custom properties (`--bg`, `--panel-bg`, `--field-bg`, `--border`, `--muted`, `--text`, `--accent`, `--positive`, `--row-hover`), redefined per-theme under `[data-theme="dusk"]`/`[data-theme="dawn"]` in `globals.css` (theme follows the current turn's phase, see `themeForPhase`). Never hardcode a hex/rgb color in a component — always reference a token via `var(--x)`, so it tracks the active theme.
+**Colors** — entirely CSS custom properties, redefined per-theme in `globals.css`. Never hardcode a hex/rgb color in a component; always reference a token via `var(--x)` so it tracks the active theme (there are currently zero hardcoded colors app-wide — keep it that way).
+
+Three things about the token set are load-bearing and easy to undo by accident:
+
+- **The surface ladder is `--bg` → `--surface` → `--surface-raised`**, and each step must keep ~1.20 contrast. `.panel` sits on `--surface`; modals, tooltips, sticky table headers and the turn chip sit on `--surface-raised`. `--field-bg` is *recessed below* the surface, so inputs read as cut into a panel rather than as another panel. This ladder used to be 1.08, which is why the app read as one flat sheet. `--panel-bg` survives only as a legacy alias for `--surface`.
+- **`--accent` and `--accent-text` are different colors on purpose.** `--accent` is a fill/rule; `--accent-text` is for text and outlines. One ember token cannot be both legible and rich, and collapsing them is what made every button in the app fail AA. Similarly `--accent-solid` + `--on-accent` are the primary button pair, and `--danger` (not `--accent`) is for destructive actions.
+- **Contrast is gated, not vibes.** `npm run audit:contrast --workspace=web` parses the theme blocks straight out of `globals.css` and fails on any AA regression. Run it after touching a color.
+
+**Themes** — `dusk` and `dawn` follow the current turn's phase via `themeForPhase`. Both are *underground darks*: Ravenheart is a cave civilisation, so they differ by lamplight temperature and lift, not by daylight. `limestone` is a light-theme backup that no phase maps to; reach it by setting `LIFEWEB_THEME=limestone` (`resolveTheme` in `web/lib/turnFormat.js`, applied in `layout.js`). A CRT/terminal look is a parked option, written up in `docs/systemdocs/CRT-TERMINAL.md` — read that before rebuilding it, since it's been half-built and deleted twice.
+
+**Tailwind is bridged to the tokens** via the `@theme inline` block in `globals.css`. That's what makes `text-sm`/`text-lg` resolve to the design scale rather than Tailwind's stock sizes, and what makes `text-muted`/`bg-surface` real utilities. Prefer those utilities over an inline `style={{ color: "var(--muted)" }}` object in new code — the app still carries ~160 of those and they're being retired as pages are touched. When overriding a size token in `@theme`, always pair it with its `--text-<size>--line-height`, or the utility falls back to a ratio computed against the size you just replaced.
 
 **Shared classes** — use these instead of rolling one-off markup:
-- `.panel` for any card/section container.
-- `.btn` / `.btn-quiet` for buttons.
+- `.panel` for any card/section container, with `.panel-header` for its heading (a serif `--fs-lg` with a hairline rule — use it instead of a bare `h2.mb-3.font-bold`, which had six different ad-hoc treatments across 28 sites).
+- Buttons, in descending weight: `.btn` (solid primary), `.btn-secondary` (outline), `.btn-danger` (destructive — Reject, Kill, Restart Game), `.btn-quiet` (text-only). `.btn` is a solid fill now, not an outline, so it lands with real weight on all 73 call sites; pick the variant by how important the action is rather than defaulting to `.btn` everywhere.
 - `.field` wrapping a `.field-label` + input/textarea/select is how *every* form control in the app gets themed (background, border, font). A bare `<select>`/`<input>` outside `.field` falls back to unstyled native browser chrome and visibly breaks the theme — always wrap it, even for a single standalone control.
 - `.chip` for small tag/pill labels, `.data-table` for tabular data, `.menu-item` for link-like row actions.
 - `.modal-overlay`/`.modal-panel`, normally reached via `useConfirm()` (see "Confirm dialog" above) rather than built by hand.
 
-**Page shell convention** — every top-level page follows `<div className="mx-auto flex max-w-{2xl–6xl} flex-col gap-6 p-6 sm:p-8">` with `<h1 className="text-2xl font-bold">{Title}</h1>` as the first child (the serif face and weight come from the rules above — don't add `text-3xl` or other one-off sizing). Its `loading.js` skeleton mirrors this: same shell at `max-w-5xl`, the same `<h1>`, and a `.panel animate-pulse p-4` block reading `Loading…` in `var(--muted)`.
+**Page shell** — `web/app/components/PageShell.js`, not a convention any more. Every top-level page is `<PageShell width><PageHeader title subtitle actions />…</PageShell>`; `width` is `narrow` / `default` / `wide`, which is the whole menu (it replaced five ad-hoc `max-w-*` values chosen per page). `PageHeader`'s `actions` slot is for anything that belongs beside the title — a sub-nav, a faction switcher — which pages used to improvise. Don't hand-roll `mx-auto flex max-w-… p-6 sm:p-8` or a bare `<h1>` again; that convention was documented for months and drifted anyway, which is why it's a component now.
+
+Its `loading.js` is `<SkeletonPage width title panels />` from the same file, so a skeleton physically cannot disagree with its page about width or title — they did, everywhere (every skeleton was `max-w-5xl` regardless of its page, and four had no `<h1>` at all, so every navigation visibly re-flowed). `panels` is an array of bar-width percentages roughly tracing what lands. The one exception is `web/app/(app)/loading.js`, the group fallback: it renders no title, because it can't know which page is arriving.
+
+**Headings inside a page** — `.panel-header` for a section heading (serif, `--fs-lg`, hairline rule beneath). Use `.section-title` instead wherever the heading is a *flex child sitting beside something else* — a modal title next to its close button, a status band next to its value, a "Tags" heading next to its buttons. `.panel-header`'s `border-bottom` would underline just the title text there rather than spanning the container, which reads as an underline, not a divider.
 
 ## Character proxying ("tupper" messages)
 

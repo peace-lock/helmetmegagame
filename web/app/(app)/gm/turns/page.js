@@ -3,6 +3,7 @@ import { prisma, describeMoveEffects } from "@lifeweb/db";
 import { getGmSession, listGuildMembers } from "@/lib/discordGuild";
 import { REQUEST_TYPE_LABELS, REQUEST_STATUS_LABELS } from "@/lib/requests";
 import AdjudicateTabs from "./AdjudicateTabs";
+import PageShell, { PageHeader } from "@/app/components/PageShell";
 
 const HISTORY_LIMIT = 500;
 const DESCRIPTION_LIMIT = 100;
@@ -136,8 +137,8 @@ export default async function TurnsPage({ searchParams }) {
   const now = new Date();
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-6 p-6 sm:p-8">
-      <h1 className="text-2xl font-bold">Adjudicate</h1>
+    <PageShell width="wide">
+      <PageHeader title="Adjudicate" />
       <AdjudicateTabs
         initialTab={tab}
         moves={actions.map((a) => ({
@@ -186,6 +187,6 @@ export default async function TurnsPage({ searchParams }) {
           createdAtMs: r.createdAt.getTime(),
         }))}
       />
-    </div>
+    </PageShell>
   );
 }
