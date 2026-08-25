@@ -121,7 +121,7 @@ categories:
           * Anyone can produce Resources by spending a Routine Move on Hunting, Herding, Farming, or Fishing (the /hunt, /fish, /farm and /herd commands are the shortcut) but only people with the Laborer tag produce enough to feed people. Each one needs the right ground under you — and nothing at all can be produced in the Caves.
           * Resources can either be stored in your character or in your faction’s Silo.
           * Players (but especially faction Leaders and Treasurers) are responsible for organizing, taxing, distributing, and trading Resources.
-          * Characters automatically consume 1 ⬢ a day. If you have 0 ⬢ at the start of a turn, you’ll go Hungry, netting you -1 to all Rolls until the next time you eat.
+          * Characters automatically consume 1 ⬢ a turn. If you have 0 ⬢ at the start of a turn, you’ll go Hungry, netting you -1 to all Rolls until the next time you eat.
       - title: Respawning
         body: |-
           **Respawning**:
