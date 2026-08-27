@@ -23,7 +23,7 @@ and that constant sets `openToPlayers: false` and `leaderWhitelistEnabled:
 true`. So the natural opening move — wipe to a clean slate — leaves a game
 nobody can join, with the Leader roles re-locked. It also resets **every
 balance knob**: `playerCount`, `startingTagPoints`, `equipSlots`,
-`maxNegativeTags`, `productionCoefficient`, and the feature switches
+`maxDrawbackPoints`, `productionCoefficient`, and the feature switches
 (`playtestModeEnabled`, `nicknameSyncEnabled`, `archiveVisible`,
 `avatarUploadsEnabled`, `portraitMakerEnabled`, `messageWipeEnabled`). **Screenshot the Game Config
 form before you wipe.** The row is updated, not recreated, so anything absent

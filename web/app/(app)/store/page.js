@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@lifeweb/db";
 import { auth } from "@/lib/auth";
 import { loadPointBuyCatalog } from "@/lib/pointBuyCatalog";
-import { DEFAULT_MAX_NEGATIVE_TAGS } from "@/lib/characterCreation";
+import { DEFAULT_MAX_DRAWBACK_POINTS, drawbackPoints } from "@/lib/characterCreation";
 import PageShell, { PageHeader } from "@/app/components/PageShell";
 import StoreClient from "./StoreClient";
 
@@ -28,7 +28,7 @@ export default async function StorePage() {
         tags: { select: { tagId: true, source: true } },
       },
     }),
-    prisma.gameConfig.findUnique({ where: { id: 1 }, select: { maxNegativeTags: true } }),
+    prisma.gameConfig.findUnique({ where: { id: 1 }, select: { maxDrawbackPoints: true } }),
   ]);
   // No character, nothing to spend — the wizard (or the sheet) is the page
   // they actually want.
@@ -42,15 +42,17 @@ export default async function StorePage() {
   const held = new Set(heldIds);
   const heldTags = tags.filter((t) => held.has(t.id)).map((t) => ({ id: t.id, name: t.name }));
 
-  // Drawbacks already spent, for PointBuy's counter. Every negative tag is
-  // purchasableAfterStart: false, so the store can't sell one and this number
-  // can't move here — it is shown so a player knows where they stand, not to
-  // gate the cart. Only POINT_BUY counts: a GM-inflicted wound is not a
+  // Drawback points already spent, for PointBuy's counter. Every negative tag
+  // is purchasableAfterStart: false, so the store can't sell one and this
+  // number can't move here — it is shown so a player knows where they stand,
+  // not to gate the cart. Only POINT_BUY counts: a GM-inflicted wound is not a
   // choice the player made with their points.
   const costById = new Map(tags.map((t) => [t.id, t.pointCost]));
-  const negativeHeld = character.tags.filter(
-    (ct) => ct.source === "POINT_BUY" && (costById.get(ct.tagId) ?? 0) < 0,
-  ).length;
+  const drawbackHeld = drawbackPoints(
+    character.tags
+      .filter((ct) => ct.source === "POINT_BUY")
+      .map((ct) => ({ pointCost: costById.get(ct.tagId) })),
+  );
 
   return (
     <PageShell width="wide">
@@ -62,8 +64,8 @@ export default async function StorePage() {
         tags={tags}
         budget={character.tagPoints}
         heldTags={heldTags}
-        negativeCap={config?.maxNegativeTags ?? DEFAULT_MAX_NEGATIVE_TAGS}
-        negativeHeld={negativeHeld}
+        drawbackCap={config?.maxDrawbackPoints ?? DEFAULT_MAX_DRAWBACK_POINTS}
+        drawbackHeld={drawbackHeld}
       />
     </PageShell>
   );

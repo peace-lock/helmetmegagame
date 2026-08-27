@@ -16,7 +16,7 @@ import {
   filterTagsByQuery,
   prerequisiteNames,
   hasPrerequisite,
-  negativeTagCount,
+  drawbackPoints,
 } from "@/lib/characterCreation";
 import { formatTagRequirement } from "@/lib/formatTagRequirement";
 import ChipText from "./ChipText";
@@ -40,13 +40,13 @@ import CheckField from "./CheckField";
 // `actions` is an optional node rendered at the foot of the build pane —
 // the store puts its checkout button there; the wizard needs nothing.
 //
-// `negativeCap` / `negativeHeld` are the drawback limit (TAGS.md §4a): at
-// most `negativeCap` negative-cost tags bought through this menu, with
-// `negativeHeld` already spent elsewhere. Creation passes the cap and 0 held;
-// the store passes the cap and the drawbacks the character bought at
-// creation, and since no drawback is ever purchasableAfterStart its own count
-// can never move — there the line is a readout, not a limit. Pass a null cap
-// to render nothing at all.
+// `drawbackCap` / `drawbackHeld` are the drawback limit (TAGS.md §4a): the
+// drawbacks bought through this menu may give back at most `drawbackCap`
+// points in total, with `drawbackHeld` already spent elsewhere. Creation
+// passes the cap and 0 held; the store passes the cap and the points the
+// character's drawbacks already gave back at creation, and since no drawback
+// is ever purchasableAfterStart that figure can never move — there the line
+// is a readout, not a limit. Pass a null cap to render nothing at all.
 
 function TagRow({ tag, isSelected, cost, unaffordable, onToggle }) {
   const groupColor = tag.group?.color ?? null;
@@ -110,8 +110,8 @@ export default function PointBuy({
   selectedIds,
   onChange,
   actions = null,
-  negativeCap = null,
-  negativeHeld = 0,
+  drawbackCap = null,
+  drawbackHeld = 0,
 }) {
   // Full catalog by id, not just what's on offer, so a chain walk
   // (parentTagId) never dead-ends on a tag this menu happens to filter out.
@@ -211,19 +211,19 @@ export default function PointBuy({
   const spent = effectiveTotalCost(selected, byId, grantedIds);
   const remaining = budget - spent;
 
-  // Drawbacks are counted, never discounted — see negativeTagCount. The cap
-  // is soft in exactly the same way the budget is: a click still selects, and
-  // the build pane says why the build isn't legal yet. A dimmed row that
+  // Drawback points are summed, never discounted — see drawbackPoints. The
+  // cap is soft in exactly the same way the budget is: a click still selects,
+  // and the build pane says why the build isn't legal yet. A dimmed row that
   // swallowed the click would leave the player with no explanation.
-  const negativeSelected = negativeTagCount(selected);
-  const negativeUsed = negativeHeld + negativeSelected;
-  const capped = negativeCap != null;
-  const overCap = capped && negativeUsed > negativeCap;
-  // "Drop one to continue" is only true advice if dropping something in THIS
-  // menu would help. A character grandfathered in over the cap opens /store
-  // already over it with an empty cart and nothing to drop, so there the
-  // count still reads red but the instruction stays quiet.
-  const canFixCap = overCap && negativeSelected > 0;
+  const drawbackSelected = drawbackPoints(selected);
+  const drawbackUsed = drawbackHeld + drawbackSelected;
+  const capped = drawbackCap != null;
+  const overCap = capped && drawbackUsed > drawbackCap;
+  // "Drop something to continue" is only true advice if dropping something in
+  // THIS menu would help. A character grandfathered in over the cap opens
+  // /store already over it with an empty cart and nothing to drop, so there
+  // the count still reads red but the instruction stays quiet.
+  const canFixCap = overCap && drawbackSelected > 0;
 
   function toggle(tag) {
     if (selectedIds.includes(tag.id)) {
@@ -279,11 +279,16 @@ export default function PointBuy({
     // (unmet requiredTag, or an unmet group gate) never reaches here at all:
     // `unlocked` above dropped it, along with its category tab.
     const unaffordable = !isSelected && cost > remaining;
-    // A drawback past the cap is dimmed the same way an unaffordable tag is:
-    // both are "you can't take this right now", and reusing the one state
-    // means no second visual language for the same idea.
+    // A drawback that would cross the cap is dimmed the same way an
+    // unaffordable tag is: both are "you can't take this right now", and
+    // reusing the one state means no second visual language for the same
+    // idea. Cost-aware, not presence-aware — at 5/6 a further −1 still
+    // clicks, and only a pick that would push past 6 dims.
     const capBlocked =
-      !isSelected && capped && (tag.pointCost ?? 0) < 0 && negativeUsed >= negativeCap;
+      !isSelected &&
+      capped &&
+      (tag.pointCost ?? 0) < 0 &&
+      drawbackUsed + Math.max(0, -(tag.pointCost ?? 0)) > drawbackCap;
     return (
       <TagRow
         key={tag.id}
@@ -306,11 +311,11 @@ export default function PointBuy({
       >
         <span className="text-muted">Points remaining</span>
         <span className="flex items-center gap-3">
-          {/* The drawback count gates the build the same way the budget does,
+          {/* The drawback total gates the build the same way the budget does,
               so on mobile it has to ride the same sticky bar. */}
           {capped && (
             <span style={{ color: overCap ? "var(--accent-text)" : "var(--muted)" }}>
-              {negativeUsed} / {negativeCap} drawbacks
+              +{drawbackUsed} / +{drawbackCap} drawbacks
             </span>
           )}
           <strong style={{ color: remaining < 0 ? "var(--accent-text)" : "var(--text)" }}>
@@ -435,7 +440,7 @@ export default function PointBuy({
             </div>
             {capped && (
               <div className="text-sm" style={{ color: overCap ? "var(--accent-text)" : "var(--muted)" }}>
-                drawbacks {negativeUsed} / {negativeCap}
+                drawbacks +{drawbackUsed} / +{drawbackCap}
               </div>
             )}
           </div>
@@ -446,8 +451,9 @@ export default function PointBuy({
           )}
           {canFixCap && (
             <p className="text-sm text-accent">
-              {negativeUsed} drawbacks; the limit is {negativeCap}. Drop{" "}
-              {negativeUsed - negativeCap === 1 ? "one" : negativeUsed - negativeCap} to continue.
+              Your drawbacks give back {drawbackUsed} points; the limit is {drawbackCap}. Drop{" "}
+              {drawbackUsed - drawbackCap} point{drawbackUsed - drawbackCap === 1 ? "" : "s"}&apos; worth to
+              continue.
             </p>
           )}
 

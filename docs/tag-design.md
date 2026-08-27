@@ -41,10 +41,12 @@ Negative tags return points, on a mirrored scale:
 | −4 | Severe. Permanent or near-permanent. |
 | −5 | Removes a whole sense or capability, with no realistic cure. |
 
-**You can take at most 4 negative tags.** (A GM can change that number, so
-the point-buy menu always shows the live limit next to your points.) Only
+**Your drawbacks can give back at most 6 points in total.** (A GM can change
+that number, so the point-buy menu always shows the live limit next to your
+points.) It's a point total, not a count — one severe drawback and a minor
+one is as legal as five small ones, so long as they add up to 6 or less. Only
 what you buy yourself counts — a drawback your role hands you for free, and
-anything that happens to you in play, does not use up one of the four.
+anything that happens to you in play, doesn't spend any of that budget.
 
 **0 is a valid cost and the most common one.** A tag that cannot be bought —
 an injury, a mood, a meal, something a role grants — still needs the field,

@@ -399,10 +399,11 @@ both directions fall out of one subtraction, and `remaining >= 0` is the only
 completion rule. Every negative-cost tag is `purchasableAfterStart: false` —
 a drawback you could buy mid-game would be a point farm.
 
-At most `GameConfig.maxNegativeTags` drawbacks (default 4, live on `/gm/dev`)
-may be **bought**. The role's own starting tags land as `GM_GRANT` and never
-pass through the purchase path, so the Meister's free Frail and the Headman's
-Old cost nobody a slot. `TAGS.md` §4a is the full rule.
+A character's bought drawbacks may give back at most
+`GameConfig.maxDrawbackPoints` points in total (default 6, live on `/gm/dev`).
+The role's own starting tags land as `GM_GRANT` and never pass through the
+purchase path, so the Meister's free Frail and the Headman's Old cost nobody
+any of that budget. `TAGS.md` §4a is the full rule.
 
 Leftover points are kept, not lost: they land on `Character.tagPoints`.
 

@@ -2,7 +2,7 @@ import { prisma, isDynastyMember, gambitModifierTotal } from "@lifeweb/db";
 import { getGuildMember, isCursed } from "@/lib/discordGuild";
 import { isSuperadmin } from "@/lib/superadmin";
 import { isHealable } from "@/lib/healRequests";
-import { DEFAULT_MAX_NEGATIVE_TAGS } from "@/lib/characterCreation";
+import { DEFAULT_MAX_DRAWBACK_POINTS } from "@/lib/characterCreation";
 import { HUNGER_SLUG, ATE_MEAL_SLUG } from "@lifeweb/db/lib/constants";
 
 // The whole data-assembly behind the Dev Character Panel, extracted so it can
@@ -186,7 +186,7 @@ export async function loadDevPanelProps(characterId, actingDiscordUserId) {
     // handed back 3 points creation never gave them.
     cursed: isCursed(member),
     equipSlots: config?.equipSlots ?? 6,
-    maxNegativeTags: config?.maxNegativeTags ?? DEFAULT_MAX_NEGATIVE_TAGS,
+    maxDrawbackPoints: config?.maxDrawbackPoints ?? DEFAULT_MAX_DRAWBACK_POINTS,
     startingTagPoints: config?.startingTagPoints ?? 12,
     openTurn: openTurn ? { id: openTurn.id, number: openTurn.number, phase: openTurn.phase } : null,
     gambitModifier: gambitModifierTotal(heldTags, { hungerStreak: character.hungerStreak }),

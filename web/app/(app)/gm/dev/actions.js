@@ -87,7 +87,7 @@ export async function updateGameConfig(formData) {
       equipSlots: Math.max(1, intOrZero(formData, "equipSlots")),
       // 0 is a real setting here — "no drawbacks at all" is coherent, only a
       // negative cap is nonsense.
-      maxNegativeTags: Math.max(0, intOrZero(formData, "maxNegativeTags")),
+      maxDrawbackPoints: Math.max(0, intOrZero(formData, "maxDrawbackPoints")),
       // Where the staged push posts PUBLIC declarations (db/lib/stagedPush.js).
       // Empty means composed posts are skipped at push, recorded on their
       // rows' deliveryFailures — never lost.
@@ -232,7 +232,7 @@ const DEFAULT_GAME_CONFIG = {
   startingTagPoints: 12,
   playerCount: 100,
   equipSlots: 6,
-  maxNegativeTags: 4,
+  maxDrawbackPoints: 6,
 };
 
 // Full game restart for dev/testing: wipes every player- and turn-scoped

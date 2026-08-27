@@ -247,25 +247,30 @@ reason to price one at 5.
 6 is the ceiling and −5 the floor; nothing should be priced outside them
 without a deliberate decision recorded here.
 
-**A character may buy at most `GameConfig.maxNegativeTags` drawbacks —
-4 by default, live on `/gm/dev`.** Only what was bought through the point-buy
+**A character's bought drawbacks may give back at most
+`GameConfig.maxDrawbackPoints` points in total — 6 by default, live on
+`/gm/dev`.** This is a point total, not a count of tags: one severe drawback
+(`-4`) plus an inconvenience (`-1`) is a legal `+5` build under the default
+cap, and so is five minor `-1`s. Only what was bought through the point-buy
 menu counts (`CharacterTag.source === "POINT_BUY"`): a role's free drawback
 (the Meister's Frail, the Headman's Old) arrives as `GM_GRANT`, and so does
-anything a GM or a turn effect inflicts, so neither eats a player's slots. A
-GM grant can still push someone past the cap, deliberately — the same bypass
-every other gate has (§3).
+anything a GM or a turn effect inflicts, so neither spends any of a player's
+budget. A GM grant can still push someone past the cap, deliberately — the
+same bypass every other gate has (§3).
 
-The cap has three surfaces. `PointBuy.js` counts it live in the build pane
-(`negativeCap` / `negativeHeld`), dims a drawback past the limit the same way
-it dims an unaffordable tag, and — like the budget — lets the click through
-so the pane can say why the build isn't legal. `CreateCharacterWizard` folds
-it into `canAdvance` beside `remaining >= 0`. `createCharacter` re-checks it
-server-side, because a server action is a public endpoint. `/store` shows the
-same line as a **readout only**: every drawback is
-`purchasableAfterStart: false`, so the shelf never offers one and the count
-can't move there. `negativeTagCount()` in `web/lib/characterCreation.js` is
-the shared predicate, over raw `pointCost` rather than `effectiveCost` — a
-drawback never sits in a tier chain, so there is nothing to discount.
+The cap has three surfaces. `PointBuy.js` sums it live in the build pane
+(`drawbackCap` / `drawbackHeld`), dims a drawback that would *cross* the
+limit the same way it dims an unaffordable tag — a pick that stays at or under
+the cap still clicks — and, like the budget, lets a click that goes over
+through anyway so the pane can say why the build isn't legal.
+`CreateCharacterWizard` folds it into `canAdvance` beside `remaining >= 0`.
+`createCharacter` re-checks it server-side, because a server action is a
+public endpoint. `/store` shows the same line as a **readout only**: every
+drawback is `purchasableAfterStart: false`, so the shelf never offers one and
+the total can't move there. `drawbackPoints()` in
+`web/lib/characterCreation.js` is the shared predicate, over raw `pointCost`
+rather than `effectiveCost` — a drawback never sits in a tier chain, so there
+is nothing to discount.
 
 **0 is a real price, not a missing one**, and it is the most common value in
 the file (142 of 268). Everything unpurchasable — injuries, moods, meals,

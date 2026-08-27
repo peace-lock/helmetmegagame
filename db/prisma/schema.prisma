@@ -291,15 +291,15 @@ model GameConfig {
   // as startingTagPoints above.
   equipSlots Int @default(6)
 
-  // How many negative-cost tags a character may buy through the point-buy
-  // menu. Only POINT_BUY drawbacks count against it — a role's free drawback
-  // (the Meister's Frail, the Headman's Old) arrives as GM_GRANT, and so does
-  // anything a GM or a turn effect inflicts, so neither eats a player's slots.
-  // Enforced in createCharacter and shown live in PointBuy's build pane;
-  // /store never sells a drawback, so there it is only a readout. Editable
-  // live from the Dev Panel, same posture as equipSlots above. 0 is a real
-  // setting: no drawbacks at all.
-  maxNegativeTags Int @default(4)
+  // How many points a character's drawbacks may give back in total, through
+  // the point-buy menu. Only POINT_BUY drawbacks count against it — a role's
+  // free drawback (the Meister's Frail, the Headman's Old) arrives as
+  // GM_GRANT, and so does anything a GM or a turn effect inflicts, so neither
+  // spends any of a player's budget. Enforced in createCharacter and shown
+  // live in PointBuy's build pane; /store never sells a drawback, so there it
+  // is only a readout. Editable live from the Dev Panel, same posture as
+  // equipSlots above. 0 is a real setting: no drawbacks at all.
+  maxDrawbackPoints Int @default(6)
 
   // Expected total number of players, the denominator for every role's seat
   // cap: a role with `weight: 6` in docs/roles.yaml gets

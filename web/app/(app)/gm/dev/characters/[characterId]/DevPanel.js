@@ -20,6 +20,7 @@ import useDirtyGuard from "@/app/components/useDirtyGuard";
 // The staged-op merge algebra, shared with the adjudication workspace's
 // effect composer — see web/lib/tagOpAlgebra.js for the rules.
 import { mergeTagOp } from "@/lib/tagOpAlgebra";
+import { drawbackPoints } from "@/lib/characterCreation";
 
 const TABS = ["Identity", "Tags", "Turn", "Goals", "Record"];
 
@@ -51,7 +52,7 @@ export default function DevPanel({
   feed,
   cursed,
   equipSlots,
-  maxNegativeTags,
+  maxDrawbackPoints,
   startingTagPoints,
   openTurn,
   gambitModifier,
@@ -187,7 +188,7 @@ export default function DevPanel({
         discord={discord}
         held={held}
         equipSlots={equipSlots}
-        maxNegativeTags={maxNegativeTags}
+        maxDrawbackPoints={maxDrawbackPoints}
         gambitModifier={gambitModifier}
         openTurn={openTurn}
         hasActed={Boolean(openTurnAction)}
@@ -348,7 +349,7 @@ function StateStrip({
   discord,
   held,
   equipSlots,
-  maxNegativeTags,
+  maxDrawbackPoints,
   gambitModifier,
   openTurn,
   hasActed,
@@ -356,11 +357,12 @@ function StateStrip({
 }) {
   const equipped = held.filter((h) => h.equipped).length;
   // Point-bought drawbacks only, matching the cap PointBuy enforces — a
-  // GM-inflicted wound is not one of the player's slots. Shown as a fact, not
-  // a limit: a GM grant deliberately ignores every gate, this one included.
-  const drawbacks = held.filter(
-    (h) => h.source === "POINT_BUY" && (h.pointCost ?? 0) < 0,
-  ).length;
+  // GM-inflicted wound doesn't spend any of the player's budget. Shown as a
+  // fact, not a limit: a GM grant deliberately ignores every gate, this one
+  // included.
+  const drawbacks = drawbackPoints(
+    held.filter((h) => h.source === "POINT_BUY"),
+  );
   // Four labeled clusters instead of one undifferentiated 15-fact grid, so a
   // GM's eye lands on the right group instead of scanning the whole strip.
   // Purely presentational — every value below is unchanged from before.
@@ -383,7 +385,7 @@ function StateStrip({
         ["Resources", `${staged.resources} ⬢`],
         ["Tag points", <TagPointsValue key="tp" points={staged.tagPoints} />],
         ["Equipment", `${equipped} / ${equipSlots}`],
-        ["Drawbacks", `${drawbacks} / ${maxNegativeTags}`],
+        ["Drawbacks", `+${drawbacks} / +${maxDrawbackPoints}`],
         ["Gambit", gambitModifier > 0 ? `+${gambitModifier}` : String(gambitModifier)],
       ],
     ],
