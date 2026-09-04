@@ -1390,9 +1390,9 @@ export default function RequestActionsProvider({
                     </label>
                     <p className="text-xs text-muted">
                       You can move someone you lead, someone you&apos;ve bound,
-                      or a body — anyone standing where you are. It does not
-                      spend their turn, and it does not move you, so go there
-                      yourself afterwards. ‡
+                      or a body — anyone standing anywhere in your zone. It does
+                      not spend their turn, and it does not move you, so go
+                      there yourself afterwards. ‡
                     </p>
                   </>
                 )}

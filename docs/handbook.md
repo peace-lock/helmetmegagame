@@ -48,10 +48,10 @@ Each part of the game is explained in detail later in this Handbook. At a high l
 Each turn you will receive the results of your Move and other Moves that affected you. Some Moves may also have results posted publicly. Read these to find out what events your character is involved in or witnesses.
 
 **Read What People Are Doing Around You**  
-Each Zone has a Summary channel, where players can post descriptions of what their character can be seen doing, and each Location in the Zone has its own channel, where the people standing there interact. See what's happening around you and consider how your character might respond. ‡
+Each Zone has a Summary channel, where players can post descriptions of what their character can be seen doing, and a channel for each of its Locations, where the people at that Location can interact. See what's happening around you and consider how your character might respond.
 
 **Talk To People**  
-Introduce yourself, barge into conversations, make plans, offer services, beg for food, ask questions, etc. The bulk of the game is roleplaying as your character in a Location's channel, its Rooms, or a private Conversation. OOC discussions should take place in `#general`, keeping in mind that you should not intentionally reveal which character you play. ‡
+Introduce yourself, barge into conversations, make plans, offer services, ask questions, beg for food, etc. The bulk of the game is roleplaying as your character in a public Location or one of its Rooms, or in private Conversation channel. OOC discussions should take place in `#general`, keeping in mind that you should not intentionally reveal which character you play. 
 
 **Decide What You're Doing**  
 Walk between Locations as often as you like, travel to another Zone, submit a description of what your character is trying to accomplish during the turn, or do neither and spend the day laboring. ‡  
@@ -83,13 +83,13 @@ General questions can be asked in the `#general` channel or by creating a thread
 | Channel | What it's for |
 |---|---|
 | **Summary** (text channel) | Describing, in broad terms, what other players would see your character doing. This channel has a 5-minute slowmode, not meant for conversations.|
-| **A Location** (text channel) | The one place you're standing in. Talk in the channel itself, step into one of its public Rooms (threads), or use the pinned message's buttons: **Who's here?**, **Secret rooms?**, **Converse**. ‡ |
+| **A Location** (text channel) | The place your character is standing in. Talk in the channel itself, step into one of its public Rooms (threads), or use the pinned message's buttons: **Who's here?**, **Secret rooms?**, **Converse**. ‡ |
 
 #### **Website**
 | Page | Content |
 |---|---|
-| **Character** | Your character sheet. Current Location, Resources, Gambit modifier, Tag Points, tags and equipment, Desires, your bio and portrait, all requests functions. ‡ |
-| **Faction** | Faction roster and leadership. ‡ |
+| **Character** | Your character sheet. Current Location, Resources, Gambit modifier, Tag Points, tags and equipment, Desires, Default Move, your bio and portrait, all requests functions. ‡ |
+| **Faction** | Faction roster, Silo balance, ledger, and leadership. |
 | **Documents** | Game rules and briefs. **Assigned** has specific documents provided by your role or tags. |
 | **Notes** | Your private Journal, plus messages saved with ⭐. Both are visible only to you. |
 | **Archive** | A full transcript of all roleplay channels. Hidden until after the game ends. |
@@ -102,17 +102,17 @@ Bascinet runs for 30 real days. One turn is one of those days, and turns alterna
 At the end of each turn the game resolves what happened during it. Move results are posted, Resources are adjusted, and travel takes effect. You can enable turn pings on your [Character](https://ravenheart.quest/character) page if you want the bot to tell you whenever a new turn begins.
 
 You can find information on the current turn in the `#turns` channel, in addition to the three main controls:  
-- **Travel** walks you to a connected Location. Walking inside your Zone is free, with a short cooldown between steps. You get one free Zone crossing a turn, and an **equipped mount** gives you a second; past those, crossing spends your Move, and once you've acted you can't cross at all. Your sheet shows how many you have left. Either way you arrive immediately, and the picker always lets you bring along anyone you could carry: someone bound or helpless, a body, or a member of your faction if you lead it. ‡  
+- **Travel** walks you to a connected Location. Walking inside your Zone is free, with a short cooldown between steps. Crossing into another Zone uses your Move — once a turn, twice if you have a mount. Either way you arrive immediately, and the picker always lets you bring along anyone you could carry: someone bound or helpless, a body, or a member of your faction if you lead it. ‡  
 - **Move** is used to submit your character's Move for the turn.  
 - **Speak** allows you to post as your character without typing into a channel, helping to obscure your identity.
 
 ### The Dawn Wipe
 
-At the start of every Dawn turn all roleplay channels are cleared and their contents are sent to the Archive, which is unlocked for players to read after the game ends. This helps to keep scenes and threads focused on the day at hand, rather than long-running conversations. Since Dawn comes around every other turn, a scene has two days to run before the wipe reaches it. ‡
+At Dawn all roleplay channels are cleared and their contents are sent to the Archive, which is unlocked for players to read after the game ends. This helps to keep scenes and threads focused on the current day, rather than long-running conversations.
 
 What survives:
 - Every Room keeps its thread and its description; the messages in it are archived. ‡
-- Conversations do not survive. Open a new one after the wipe. ‡
+- Conversations do not survive. Open a new one in the morning. ‡
 
 If you want to remember something, use the ⭐ reaction on the message before Dawn to save it to your [Notes](https://ravenheart.quest/notes) page.
 
@@ -179,23 +179,15 @@ There are seven Zones in Bascinet:
 
 Every Zone is made of Locations — the Gatehouse, the Keep and the Garrison in the Fortress, say. Your character stands in exactly one Location at a time, and sees only that Location's channel (plus the Zone's Summary). Locations are connected like a map: use **Travel** to walk to a neighbouring one. Walking inside your Zone is free, with a short cooldown between steps; crossing into another Zone costs your Move. ‡
 
-Out in the wild, a Location carries its Zone in its name — the Ravine in the Black Hills is hills-ravine, the Village in the Marshes is marshes-village. Every zone has a ravine and a river of its own, so the Zone is part of the name. Built places need no such help and go by what they are: the Keep, the Cathedral, the Factory. ‡
-
-Not every way is simply open. A **gate** announces you in the Zone's Summary when you cross it — a manned one names you outright, an unmanned one only reports what a passer-by would have seen. A **locked** way appears in your Travel list but refuses you until you carry the right thing. Some ways can be **opened and closed** by the people who hold them, with a button on the Location's pinned message; while shut, nobody passes. And some ways you will not see listed at all. ‡
-
-Some ways are too tight, too steep or too enclosed for a horse or a cart — a crawl, a cliff path, a lift, a culvert. You'll be turned back at those while you're mounted. Unequip the animal and you can go through on your own two feet. ‡
-
-If you have the key to one of those, you may be asked in a DM whether to leave it open for the next 24 hours. Say yes and anyone can see it and use it until the day is out — which is how somebody without a key follows you through. Say no and it falls shut behind you. ‡
-
 Each Location's channel has a pinned message at the top with its description, the list of its public Rooms, and three buttons. ‡
 | Channel | What it's for |
 |---|---|
 | **Summary** (text channel) | Describing, in broad terms, what other players would see your character doing. This channel has a 5-minute slowmode, not meant for conversations.|
-| **A Location** (text channel) | The open street. Anyone standing here can talk in the channel itself. ‡ |
-| **Rooms** (threads under the Location) | The places inside a Location — the Old Cock Inn on the Square, the Throne Room in the Keep. Public Rooms are open to everyone here. Private Rooms are hidden: you only see one if you hold the right tag, such as a key. ‡ |
+| **A Location** (text channel) | Anyone standing in the Location can talk in the channel itself. ‡ |
+| **Rooms** (threads under the Location) | The places inside a Location — the Old Cock Inn on the Square, the Throne Room in the Keep. Public Rooms are open to everyone at that Location. Private Rooms are hidden: you only see one if you hold the right tag, such as a key. ‡ |
 
-The three buttons on the pinned message: ‡
-- **Who's here?** — the characters standing in this Location. Anyone concealed shows up as "a young man" or the like. ‡
+Usable Commands (found in the pinned message): ‡
+- **Who's here?** — the characters standing in this Location. Anyone concealed shows up as a "young man" or the like.
 - **Secret rooms?** — the private Rooms you can enter here, and the Conversations you're part of. ‡
 - **Converse** — open a private Conversation, linked to one of the Rooms. ‡
 
@@ -205,19 +197,17 @@ You may also gain access to unique roleplay channels by other means, such as acq
 
 ### Public Scenes
 
-Use the Location's channel or one of its public Rooms when you want to play out a scene or conversation visible to everyone in the area. It could be a meeting, a conversation or argument, starting a confrontation, or anything else your character might do that involves others. ‡
-
-If you see someone post a description of their Character in the Summary channel and want to interact with them, walk to where they are and do so there. ‡
+Use the Location's channel or one of its public Rooms when you want to play out a scene or conversation visible to everyone in the area. It could be a meeting, conversation argument, confrontation, or anything else your character might do that involves others.
 
 ### Private Conversations
 
 To hold a private conversation with one or more other characters at your Location: ‡
 1. Press **Converse** on the Location's pinned message and pick which Room it's linked to. ‡
-2. Give it a name. The bot opens a private thread with you in it. ‡
+2. Give it a name. A private thread will be opened with you in it.
 3. Use `/add` in the thread and choose who you want to invite. ‡
 4. Use `/remove` if someone should leave the conversation. ‡
 
-A Conversation isn't silent. Every fifteen minutes, the Room it's linked to hears who has been whispering — never names, only descriptions: *A young man and an old woman are whispering…* Conversations are cleared every Dawn. ‡
+A Conversation isn't silent. Every fifteen minutes, the Room it's linked to hears whispering by people with vague descriptions: *A young man and an old woman are whispering…* Conversations are cleared every Dawn. 
 
 ### Character Mentions
 
@@ -458,8 +448,9 @@ Your [Character](https://ravenheart.quest/character) page contains your characte
 | Button | Effect | When You Can Use |
 |---|---|---|
 | **Heal** | Treat an affliction on yourself or another person within reach, based on your medical skill. | {tag:medical-basic} or better. |
-| **Loot** | Search a dead or incapacitated person standing with you and take their ⬢ and whatever they were carrying that can be carried off. Their property, and anything grafted or bound to them, stays with them. | Always, the game will reject invalid targets. |
-| **Bind** | Tie up someone within reach. They must agree, unless they're dead or already helpless. ‡ | Always. |
+| **Loot** | Search a dead or incapacitated person in your Zone and take their ⬢ and whatever they were carrying that can be carried off. Their property, and anything grafted or bound to them, stays with them. | Always, the game will reject invalid targets. |
+| **Move Player** | Carry a dead or bound person, or a member of your faction if you're the Leader, to a connected Location. This doesn't spend their Move or yours. The Travel picker on Discord offers the same thing as you go. ‡ | Always. |
+| **Bind** | Tie up someone within reach. | Always. |
 | **Free** | Cut loose someone within reach. | Always. |
 | **Harm** | Injure a helpless person within reach, or finish off a Dying or bound person. This will never instantly kill, a GM will verify first. | Always. |
 | **Move Player** | Carry a dead or bound person, or a member of your faction if you're the Leader, to a connected Location. This doesn't spend their Move or yours. The Travel picker on Discord offers the same thing as you go. ‡ | Always. |

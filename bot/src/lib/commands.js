@@ -84,7 +84,7 @@ const commandDefinitions = [
   // off, so it needs to be reachable from a DM the same way /location is.
   new SlashCommandBuilder()
     .setName("conceal")
-    .setDescription("Hide your name behind an anonymous alias, until you turn it off. ‡")
+    .setDescription("Hide your name behind an anonymous alias. Use again to turn off.")
     .setContexts(ANYWHERE),
   // Run inside a channel you can speak in, this skips the destination picker
   // and posts there. Run anywhere else — including a DM — it asks where first.

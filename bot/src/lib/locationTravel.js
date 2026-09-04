@@ -100,7 +100,7 @@ function buildLocationSelectRow(locations, from) {
         description: (from
           ? location.zoneId === from.zoneId
             ? "Same zone ‡"
-            : `Crosses into ${location.zone?.name ?? "another zone"} — costs your Move ‡`
+            : `Crosses into ${location.zone?.name ?? "another zone"} — would cost your Move`
           : `${location.zone?.name ?? "Somewhere"} ‡`
         ).slice(0, 100),
       })),

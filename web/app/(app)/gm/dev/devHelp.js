@@ -21,7 +21,7 @@ export const CONFIG_HELP = {
   catatonicDeathTurns:
     "The one automatic death in the game: a character who stays Catatonic this many turns straight dies at turn close — full cleanup, no GM confirm. Covers AFK players and players who left the server (their characters go Catatonic on the spot instead of dying). 0 turns it off; the player gets a warning DM one turn before.",
   locationMoveCooldownSeconds:
-    "How long a character waits between two walks from one location to another inside the same zone. Crossing into another zone is gated by the Move instead, so this never touches it. 0 removes the wait. ‡",
+    "How long a character waits between walks from one location to another inside the same zone.",
   autoReconcileEnabled:
     "Run the channel doctor's cheap reconcile (roles vs. the database) automatically after every turn advance — it always runs when the bot restarts.",
   tupperAutocorrectEnabled: "Capitalize sentence starts in Tupper messages before proxying.",

@@ -303,7 +303,7 @@ desires:
     families: [drugs]
 
   try-a-new-drug:
-    name: "Try a kind of recreational drug you never have ‡"
+    name: "Try a kind of recreational drug you've never had before"
     tier: 2
     families: [drugs]
 

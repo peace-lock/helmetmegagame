@@ -256,8 +256,8 @@ async function handleMentions({ message, channel, proxied, mentionedRoleIds }) {
     await sendDm(
       message.author,
       notHere.length === 1
-        ? `» *${notHere[0]} isn't in ${where} — they're invited, and they'll see this conversation when they arrive.* ‡`
-        : `» *${notHere.join(", ")} aren't in ${where} — they're invited, and they'll see this conversation when they arrive.* ‡`,
+        ? `» *${notHere[0]} isn't in ${where} — they're invited, and will see this conversation when they arrive.*`
+        : `» *${notHere.join(", ")} aren't in ${where} — they're invited, and will see this conversation when they arrive.*`,
       { source: "system_notice" },
     ).catch(() => {});
   }

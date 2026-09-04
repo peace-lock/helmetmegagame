@@ -134,13 +134,13 @@ categories:
           The game’s roleplay layer is where the results of last turn’s Moves come to life. If the Gamemaster declared you were bested in a duel, that’s canon; you can describe how it went down in the roleplay channels. You can also use the roleplay channels at any time to chat, exchange information, or coordinate your Moves with other players.
 
           **Channels and Zones**
-          There are three surface zones — the Fortress, the Town, and the Windlands — and three levels of the Caves: the Caverns, the Railroad, and the Aberrant Pits. Each is made of Locations, and you stand in exactly one of them. Walking to a connected Location inside your Zone is free (with a short cooldown); crossing into another Zone costs your Move, the cave levels included. ‡
+          There are three surface zones — the Fortress, the Town, and the Windlands — and three levels of the Caves: the Caverns, the Railroad, and the Aberrant Pits. Each is has their own Locations, and you stand in one of them at a time. Walking to a connected Location inside your Zone is free (with a short cooldown); crossing into another Zone costs your Move, the cave levels included.
 
           Every surface zone has a summary channel: optionally describe, in broad terms, what other people in your Zone saw you doing. ‡
 
-          Every Location has its own channel — the only one you see. Talk in it, step into one of its public Rooms (the threads under it), or use the pinned message's buttons: **Who's here?**, **Secret rooms?** (the private Rooms your tags let you into), and **Converse** (a private thread; then `/add (character)` to invite people). ‡
+          Every Location has its own channel. Talk in it, step into one of its public Rooms (the threads under it), or use the pinned message's buttons: **Who's here?**, **Secret rooms?** (the private Rooms your tags let you into), and **Converse** (start a private thread, use `/add (character)` to invite people).
 
-          A cave level has Location channels of its own — just no summary. ‡
+          A cave level has Location channels of its own, just no summary.
 
           You cannot roleplay in DMs or outside of the server.
 
