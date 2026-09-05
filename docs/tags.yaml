@@ -8757,7 +8757,7 @@ tags:
     purchasableAfterStart: false
     removable: true
     craftable: true
-    consumable: true
+    consumable: false
     requirement:
       turnsCost: 1
       resourceCost: 6
